@@ -16,10 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, RedirectView
 
 urlpatterns = [
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('admin/', admin.site.urls),
-    path('Invitations/',include("InvitationAPP.urls"))
+    path('Invitations/', include("InvitationAPP.urls")),
+    # Convenience alias: support lowercase '/invitations/' by redirecting to the canonical route
+    path('invitations/', RedirectView.as_view(url='/Invitations/', permanent=False)),
 ]

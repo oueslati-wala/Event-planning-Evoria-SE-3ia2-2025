@@ -7,8 +7,8 @@
 
 <form method="post">
     {% csrf_token %}
-    <button type="submit" class="btn btn-danger">Supprimer</button>
-    <a href="{% url 'InvitationAPP:guest_list' invitation.pk %}" class="btn btn-secondary">Annuler</a>
+    <button type="submit" class="boxed-btn5">Supprimer</button>
+    <a href="{% url 'InvitationAPP:guest_list' invitation.pk %}" class="boxed-btn2">Annuler</a>
 </form>
 
 {% endblock %}

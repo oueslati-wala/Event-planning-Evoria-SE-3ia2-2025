@@ -1,40 +1,38 @@
 {% extends 'base.html' %}
 {% block content %}
+<section class="container">
+  <h2 style="margin:0 0 0.75rem">Liste des invités</h2>
+  <a href="{% url 'InvitationAPP:guest_create' invitation.pk %}" class="boxed-btn mb-3">Ajouter un invité</a>
 
-<h2>Invités pour : {{ invitation.name }}</h2>
-
-<a href="{% url 'InvitationAPP:guest_create' invitation.pk %}" class="btn btn-primary mb-3">Ajouter un invité</a>
-
-<table class="table">
+  <table class="table">
     <thead>
-        <tr>
-            <th>Nom</th>
-            <th>Email</th>
-            <th>Téléphone</th>
-            <th>Statut</th>
-            <th>Actions</th>
-        </tr>
+      <tr>
+        <th>Nom</th>
+        <th>Email</th>
+        <th>Téléphone</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
     </thead>
     <tbody>
-        {% for guest in guests %}
-        <tr>
-            <td>{{ guest.first_name }} {{ guest.last_name }}</td>
-            <td>{{ guest.email }}</td>
-            <td>{{ guest.phone }}</td>
-            <td>{{ guest.get_status_display }}</td>
-            <td>
-                <a href="{% url 'InvitationAPP:guest_update' invitation.pk guest.pk %}" class="btn btn-sm btn-warning">Éditer</a>
-                <a href="{% url 'InvitationAPP:guest_delete' invitation.pk guest.pk %}" class="btn btn-sm btn-danger">Supprimer</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="5">Aucun invité pour le moment.</td>
-        </tr>
-        {% endfor %}
+      {% for guest in guests %}
+      <tr>
+        <td>{{ guest.first_name }} {{ guest.last_name }}</td>
+        <td>{{ guest.email }}</td>
+        <td>{{ guest.phone }}</td>
+        <td>{{ guest.get_status_display }}</td>
+        <td class="actions">
+          <a href="{% url 'InvitationAPP:guest_send_options' invitation.pk guest.pk %}" class="boxed-btn">Envoyer</a>
+          <a href="{% url 'InvitationAPP:guest_update' invitation.pk guest.pk %}" class="boxed-btn4">Éditer</a>
+          <a href="{% url 'InvitationAPP:guest_delete' invitation.pk guest.pk %}" class="boxed-btn5">Supprimer</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="muted">Aucun invité pour le moment.</td>
+      </tr>
+      {% endfor %}
     </tbody>
-</table>
-
-<a href="{% url 'InvitationAPP:invitation_detail' invitation.pk %}" class="btn btn-secondary">Retour à l'invitation</a>
-
+  </table>
+</section>
 {% endblock %}

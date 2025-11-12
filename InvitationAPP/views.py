@@ -11,7 +11,6 @@ def invitation_detail(request, pk):
     return render(request, 'InvitationAPP/invitation_detail.html', {'invitation': invitation})
 
 def invitation_create(request):
-    
     if request.method == 'POST':
         form = InvitationForm(request.POST)
         if form.is_valid():
@@ -42,16 +41,20 @@ def invitation_delete(request, pk):
 def guest_list(request, invitation_pk):
     invitation = get_object_or_404(Invitation, pk=invitation_pk)
     guests = Guest.objects.filter(invitation=invitation)
+    try:
+        print(f"Guest list for invitation {invitation.pk} ({invitation.name}): count={guests.count()}")
+    except Exception:
+        pass
     return render(request, 'InvitationAPP/guest_list.html', {'invitation': invitation, 'guests': guests})
 
 def guest_create(request, invitation_pk):
     invitation = get_object_or_404(Invitation, pk=invitation_pk)
     if request.method == 'POST':
         form = GuestForm(request.POST)
+        # Ensure unique_together (invitation, email) is validated by setting the instance before is_valid()
+        form.instance.invitation = invitation
         if form.is_valid():
-            guest = form.save(commit=False)
-            guest.invitation = invitation
-            guest.save()
+            guest = form.save()
             return redirect('InvitationAPP:guest_list', invitation_pk=invitation.pk)
     else:
         form = GuestForm()
@@ -76,3 +79,8 @@ def guest_delete(request, invitation_pk, pk):
         guest.delete()
         return redirect('InvitationAPP:guest_list', invitation_pk=invitation.pk)
     return render(request, 'InvitationAPP/guest_confirm_delete.html', {'guest': guest, 'invitation': invitation})
+
+def guest_send_options(request, invitation_pk, pk):
+    invitation = get_object_or_404(Invitation, pk=invitation_pk)
+    guest = get_object_or_404(Guest, pk=pk)
+    return render(request, 'InvitationAPP/guest_send_options.html', {'guest': guest, 'invitation': invitation})

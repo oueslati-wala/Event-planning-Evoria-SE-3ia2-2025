@@ -22,6 +22,7 @@
         <td class="actions">
           <a href="{% url 'InvitationAPP:invitation_update' obj.pk %}" class="boxed-btn4">Éditer</a>
           <a href="{% url 'InvitationAPP:invitation_delete' obj.pk %}" class="boxed-btn5">Supprimer</a>
+          <a href="{% url 'InvitationAPP:guest_list' obj.pk %}" class="boxed-btn">Invités</a>
         </td>
       </tr>
       {% empty %}

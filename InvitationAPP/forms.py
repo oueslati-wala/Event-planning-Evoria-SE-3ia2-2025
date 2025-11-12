@@ -26,7 +26,7 @@ class GuestForm(forms.ModelForm):
     class Meta:
         model = Guest
         fields = [
-            'invitation', 'title', 'first_name', 'last_name', 'email', 'phone', 
+            'title', 'first_name', 'last_name', 'email', 'phone', 
             'company', 'position', 'status', 'notes', 'plus_one', 
             'dietary_restrictions'
         ]

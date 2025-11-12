@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="container"></section>
+  <h2 style="text-align:center; margin:0 0 0.5rem">Choisir la méthode d'envoi</h2>
+  <p style="text-align:center; margin:0 0 1.25rem">Pour : <strong>{{ guest.first_name }} {{ guest.last_name }}</strong></p>
+
+  <div style="display:flex; justify-content:center; align-items:center; gap:1rem; min-height:30vh">
+    <a href="#" class="boxed-btn" style="font-size:1.25rem; padding:0.9rem 1.6rem">QR</a>
+    <a href="#" class="boxed-btn2" style="font-size:1.25rem; padding:0.9rem 1.6rem">Email</a>
+  </div>
+
+  <div style="text-align:center; margin-top:0.75rem">
+    <a href="{% url 'InvitationAPP:guest_list' invitation.pk %}" class="boxed-btn2">Retour à la liste des invités</a>
+  </div>
+</section>
+{% endblock %}
