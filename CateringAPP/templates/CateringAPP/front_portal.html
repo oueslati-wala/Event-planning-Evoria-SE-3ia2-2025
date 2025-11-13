@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container">
+  <h2 style="margin:0 0 0.75rem">Restauration</h2>
+
+  <h3 style="margin:0 0 0.5rem">Choisir un traiteur</h3>
+  <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:1rem; margin:0 0 1rem">
+    {% for c in caterers %}
+    <div class="card" style="border:1px solid #eee; border-radius:8px; padding:1rem">
+      <h4 style="margin:0 0 0.5rem">{{ c.company_name|default:c.name }}</h4>
+      {% if c.website %}<p><a href="{{ c.website }}" target="_blank">Site web</a></p>{% endif %}
+      <div style="margin-top:0.5rem">
+        <a href="?caterer={{ c.pk }}" class="boxed-btn">Voir le menu</a>
+      </div>
+    </div>
+    {% empty %}
+    <p class="muted">Aucun traiteur disponible.</p>
+    {% endfor %}
+  </div>
+
+  {% if selected %}
+  <h3 style="margin:0 0 0.5rem">Menu de {{ selected.company_name|default:selected.name }}</h3>
+  <p class="muted" style="margin:0 0 0.75rem"><a href="/Catering/">Choisir un autre traiteur</a></p>
+  <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:1rem">
+    {% for item in items %}
+    <div class="card" style="border:1px solid #eee; border-radius:8px; padding:1rem">
+      <h4 style="margin:0 0 0.5rem">{{ item.title }}</h4>
+      <p class="muted" style="margin:0 0 0.5rem">{{ item.get_category_display }}</p>
+      {% if item.description %}<p style="margin:0 0 0.5rem">{{ item.description }}</p>{% endif %}
+      <p style="font-weight:600">{{ item.price }} €</p>
+      <div style="margin-top:0.5rem">
+        <a href="#" class="boxed-btn">Choisir</a>
+      </div>
+    </div>
+    {% empty %}
+    <p class="muted">Aucun élément de menu disponible.</p>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

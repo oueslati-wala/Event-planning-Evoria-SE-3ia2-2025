@@ -22,6 +22,7 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('admin/', admin.site.urls),
     path('Invitations/', include("InvitationAPP.urls")),
+    path('Catering/', include("CateringAPP.urls")),
     # Convenience alias: support lowercase '/invitations/' by redirecting to the canonical route
     path('invitations/', RedirectView.as_view(url='/Invitations/', permanent=False)),
 ]
