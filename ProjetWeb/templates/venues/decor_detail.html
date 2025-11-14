@@ -1,0 +1,74 @@
+{% load static %}
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>{{ decor.name }} – Décor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>.hero-img{max-height:380px;object-fit:cover;border-radius:.5rem}</style>
+</head>
+<body>
+
+<header class="py-3 border-bottom">
+  <div class="container d-flex justify-content-between align-items-center">
+    <h1 class="h4 m-0">{{ decor.name }}</h1>
+    <div>
+      <a class="btn btn-outline-secondary btn-sm" href="{% url 'venues_list' %}">← Venues</a>
+      <a class="btn btn-outline-secondary btn-sm" href="{% url 'index' %}">Accueil</a>
+    </div>
+  </div>
+</header>
+
+<main class="container my-4">
+  <div class="row g-4">
+
+    <div class="col-12 col-lg-6">
+      {% if decor.image %}
+        <img class="w-100 hero-img" src="{{ decor.image.url }}" alt="{{ decor.name }}">
+      {% else %}
+        <img class="w-100 hero-img" src="{% static 'img/placeholder.png' %}" alt="Décor">
+      {% endif %}
+    </div>
+
+    <div class="col-12 col-lg-6">
+      <div class="mb-2"><strong>Catégorie :</strong> {{ decor.category|default:"—" }}</div>
+      <div class="mb-2"><strong>Prix :</strong> {{ decor.price|default:"—" }}</div>
+      <div class="mb-2">
+        <strong>Disponibilité :</strong>
+        {% if decor.available %}<span class="text-success">disponible</span>{% else %}<span class="text-danger">indisponible</span>{% endif %}
+      </div>
+     
+
+    <div class="col-12">
+      <hr>
+      <h5 class="mb-3">Venues utilisant ce décor</h5>
+      {% if decor.venues.all %}
+        <div class="row g-3">
+          {% for v in decor.venues.all %}
+            <div class="col-12 col-md-6 col-lg-4">
+              <div class="card h-100">
+                {% if v.image %}
+                  <img class="card-img-top" src="{{ v.image.url }}" alt="{{ v.nom_v }}">
+                {% endif %}
+                <div class="card-body">
+                  <strong>{{ v.nom_v }}</strong>
+                  {% if v.adresse_v %}<div class="text-muted small">{{ v.adresse_v }}</div>{% endif %}
+                  <div class="text-muted small">Places: {{ v.nb_place }} • Prix venue: {{ v.prix }}</div>
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <div class="text-muted">Aucun venue lié.</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</main>
+
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Venues</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <style>.card-img-top{height:200px;object-fit:cover}</style>
+</head>
+<body>
+<header class="py-3 border-bottom">
+  <div class="container d-flex justify-content-between align-items-center">
+    <h1 class="h4 m-0">Venues</h1>
+    <a class="btn btn-outline-secondary btn-sm" href="{% url 'index' %}">← Accueil</a>
+  </div>
+</header>
+
+<main class="container my-4">
+  {% if messages %}
+    {% for m in messages %}
+      <div class="alert alert-{{ m.tags }} mb-3">{{ m }}</div>
+    {% endfor %}
+  {% endif %}
+
+  {% if venues %}
+    <div class="row g-4">
+      {% for v in venues %}
+        <div class="col-12 col-md-6 col-lg-4 mb-4">
+          <div class="card h-100 shadow-sm">
+            {% if v.image %}
+  <img class="card-img-top"
+       src="{{ v.image.url }}?v={{ v.updated_at|date:'U' }}"
+       alt="Image de {{ v.nom_v }}">
+{% elif v.decor and v.decor.image %}
+  <img class="card-img-top"
+       src="{{ v.decor.image.url }}?v={{ v.decor.updated_at|date:'U' }}"
+       alt="Décor de {{ v.nom_v }}">
+{% else %}
+  <img class="card-img-top"
+       src="{% static 'img/placeholder.png' %}"
+       alt="Aucune image">
+{% endif %}
+
+
+            <div class="card-body">
+              <h5 class="card-title mb-1">{{ v.nom_v }}</h5>
+              {% if v.adresse_v %}<div class="text-muted small mb-2">{{ v.adresse_v }}</div>{% endif %}
+
+              {% if v.decor %}
+                <div>
+                  <strong>Décor:</strong>
+                  <a href="{% url 'decor_detail' v.decor.id %}">{{ v.decor.name }}</a>
+                  {% if v.decor.category %}<span class="text-muted">({{ v.decor.category }})</span>{% endif %}
+                </div>
+              {% endif %}
+            </div>
+
+            <div class="card-footer bg-white text-muted small d-flex justify-content-between align-items-center">
+              <span>Places: {{ v.nb_place }}</span>
+              <span>Prix venue: {{ v.prix }}</span>
+            </div>
+
+            <div class="p-3 pt-0">
+              <a href="{% url 'reserve_venue' v.id %}" class="btn btn-success btn-sm">Réserver</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">Aucun venue.</div>
+  {% endif %}
+</main>
+
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+</body>
+</html>
