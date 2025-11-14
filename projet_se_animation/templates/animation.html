@@ -1,0 +1,25 @@
+{% extends 'index.html' %}
+{% block content %}
+<div class="container mt-5">
+    <h2>Gestion des animations</h2>
+    <a href="{% url 'ajouter_animation' %}" class="btn btn-primary mb-3">Ajouter une animation</a>
+    <table class="table table-bordered">
+        <tr>
+            <th>ID</th><th>Description</th><th>Animateur</th><th>Capacité</th><th>Statut</th><th>Actions</th>
+        </tr>
+        {% for a in animations %}
+        <tr>
+            <td>{{ a.id }}</td>
+            <td>{{ a.description }}</td>
+            <td>{{ a.animateur }}</td>
+            <td>{{ a.capacite_max }}</td>
+            <td>{{ a.statut }}</td>
+            <td>
+                <a href="{% url 'modifier_animation' a.id %}" class="btn btn-warning btn-sm">Modifier</a>
+                <a href="{% url 'supprimer_animation' a.id %}" class="btn btn-danger btn-sm">Supprimer</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

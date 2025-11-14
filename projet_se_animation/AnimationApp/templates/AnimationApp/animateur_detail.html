@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Détail Animateur{% endblock %}
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h4 mb-0">{{ object.nom }}</h1>
+    <div class="d-flex gap-2">
+      <a class="btn btn-success" href="{% url 'animationapp:res_create' %}?animateur={{ object.pk }}">Réserver</a>
+      <a class="btn btn-secondary" href="{% url 'animationapp:anim_list' %}">Retour</a>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    {% if object.photo %}
+      <img src="{{ object.photo.url }}" class="img-fluid rounded" alt="{{ object.nom }}">
+    {% else %}
+      <img src="{% static 'img/lawyers/lawyers_2.jpg' %}" class="img-fluid rounded" alt="Image défaut">
+    {% endif %}
+  </div>
+
+  <dl class="row">
+    <dt class="col-sm-3">Type</dt><dd class="col-sm-9">{{ object.type_animation }}</dd>
+    <dt class="col-sm-3">Description</dt><dd class="col-sm-9">{{ object.description|default:"—" }}</dd>
+    <dt class="col-sm-3">Prix base</dt><dd class="col-sm-9">{{ object.prix_base }} DT</dd>
+    <dt class="col-sm-3">Capacité max</dt><dd class="col-sm-9">{{ object.capacite_max }}</dd>
+    <dt class="col-sm-3">Lieu</dt><dd class="col-sm-9">{{ object.get_interieur_exterieur_display }}</dd>
+    <dt class="col-sm-3">Disponible</dt><dd class="col-sm-9">{% if object.disponible %}Oui{% else %}Non{% endif %}</dd>
+    <dt class="col-sm-3">Tags</dt><dd class="col-sm-9">{{ object.tags|default:"—" }}</dd>
+  </dl>
+{% endblock %}

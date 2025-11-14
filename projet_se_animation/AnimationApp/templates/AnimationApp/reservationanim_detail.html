@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Détail Réservation{% endblock %}
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h4 mb-0">Réservation #{{ object.pk }}</h1>
+    <div class="d-flex gap-2">
+      <a class="btn btn-outline-primary" href="{% url 'animationapp:res_update' object.pk %}">Éditer</a>
+      <a class="btn btn-outline-danger" href="{% url 'animationapp:res_delete' object.pk %}">Supprimer</a>
+      <a class="btn btn-secondary" href="{% url 'animationapp:res_list' %}">Retour</a>
+    </div>
+  </div>
+
+  <dl class="row">
+    <dt class="col-sm-3">Animateur</dt><dd class="col-sm-9">{{ object.animateur.nom }}</dd>
+    <dt class="col-sm-3">Date début</dt><dd class="col-sm-9">{{ object.date_debut }}</dd>
+    <dt class="col-sm-3">Date fin</dt><dd class="col-sm-9">{{ object.date_fin }}</dd>
+    <dt class="col-sm-3">Lieu</dt><dd class="col-sm-9">{{ object.lieu }}</dd>
+    <dt class="col-sm-3">Statut</dt><dd class="col-sm-9">{{ object.get_statut_display }}</dd>
+    <dt class="col-sm-3">Total</dt><dd class="col-sm-9">{{ object.prix_total }} DT</dd>
+  </dl>
+{% endblock %}

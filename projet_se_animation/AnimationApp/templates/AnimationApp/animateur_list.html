@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Animateurs{% endblock %}
+
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h4 mb-0">Animateurs</h1>
+  </div>
+
+  {% if animations %}
+    <div class="row g-4 justify-content-center">
+      {% for a in animations %}
+        <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+          <div class="card anim-card h-100 shadow-sm">
+            {% if a.photo %}
+              <img src="{{ a.photo.url }}" class="card-img-top" alt="{{ a.nom }}">
+            {% else %}
+              <img src="{% static 'img/lawyers/lawyers_1.jpg' %}" class="card-img-top" alt="Image défaut">
+            {% endif %}
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <h5 class="card-title mb-1">{{ a.nom }}</h5>
+                  <div class="text-muted small">{{ a.type_animation }}</div>
+                </div>
+                {% if a.disponible %}
+                  <span class="badge bg-success">Disponible</span>
+                {% else %}
+                  <span class="badge bg-secondary">Indisponible</span>
+                {% endif %}
+              </div>
+
+              {% if a.description %}
+                <p class="card-text mt-2">{{ a.description|truncatechars:120 }}</p>
+              {% endif %}
+
+              <div class="d-flex flex-wrap gap-3 mt-2 small text-muted">
+                <span><i class="ti-money"></i> {{ a.prix_base }} DT</span>
+                <span><i class="ti-user"></i> {{ a.capacite_max }} pers.</span>
+                <span><i class="ti-location-pin"></i> {{ a.get_interieur_exterieur_display }}</span>
+              </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 d-flex gap-2">
+              <a class="btn btn-outline-secondary btn-sm" href="{% url 'animationapp:anim_detail' a.pk %}">Voir</a>
+              <a class="btn btn-primary btn-sm" href="{% url 'animationapp:res_create' %}?animateur={{ a.pk }}">Réserver</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">Aucun animateur pour le moment.</div>
+  {% endif %}
+{% endblock %}

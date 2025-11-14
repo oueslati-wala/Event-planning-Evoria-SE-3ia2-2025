@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static %}
+{% load static %}
+
+{% block title %}Réservations{% endblock %}
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h4 mb-0">Réservations</h1>
+    <a class="btn btn-primary" href="{% url 'animationapp:res_create' %}">Nouvelle réservation</a>
+  </div>
+
+  {% if object_list %}
+    <div class="row g-4">
+      {% for r in object_list %}
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="card res-card h-100 shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+              <span class="fw-semibold">Réservation #{{ r.pk }}</span>
+              <span class="badge {% if r.statut == 'confirme' %}bg-success{% elif r.statut == 'annule' %}bg-danger{% else %}bg-secondary{% endif %}">{{ r.get_statut_display }}</span>
+            </div>
+            <div class="card-body">
+              <div class="d-flex align-items-center gap-2 mb-3">
+                {% if r.animateur.photo %}
+                  <img src="{{ r.animateur.photo.url }}" class="res-avatar" alt="{{ r.animateur.nom }}">
+                {% else %}
+                  <img src="{% static 'img/lawyers/lawyers_2.jpg' %}" class="res-avatar" alt="Animateur">
+                {% endif %}
+                <div class="fw-semibold mb-0">{{ r.animateur.nom }}</div>
+              </div>
+
+              <div class="mb-2">
+                <span class="text-muted small"><i class="ti-calendar"></i> Début</span>
+                <div>{{ r.date_debut|date:"d/m/Y H:i" }}</div>
+              </div>
+              <div class="mb-2">
+                <span class="text-muted small"><i class="ti-calendar"></i> Fin</span>
+                <div>{{ r.date_fin|date:"d/m/Y H:i" }}</div>
+              </div>
+              <div class="mb-2">
+                <span class="text-muted small"><i class="ti-location-pin"></i> Lieu</span>
+                <div>{{ r.lieu }}</div>
+              </div>
+              <div>
+                <span class="text-muted small"><i class="ti-money"></i> Total</span>
+                <div class="fw-semibold">{{ r.prix_total }} DT</div>
+              </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 d-flex gap-2">
+              <a class="btn btn-outline-secondary btn-sm" href="{% url 'animationapp:res_detail' r.pk %}">Voir</a>
+              <a class="btn btn-outline-primary btn-sm" href="{% url 'animationapp:res_update' r.pk %}">Éditer</a>
+              <a class="btn btn-outline-danger btn-sm" href="{% url 'animationapp:res_delete' r.pk %}">Supprimer</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info">Aucune réservation.</div>
+  {% endif %}
+
+  {% if is_paginated %}
+    <nav class="mt-3">
+      <ul class="pagination">
+        {% if page_obj.has_previous %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Précédent</a></li>
+        {% endif %}
+        <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span></li>
+        {% if page_obj.has_next %}
+          <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Suivant</a></li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+{% endblock %}
