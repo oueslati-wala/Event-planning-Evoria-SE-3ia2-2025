@@ -26,7 +26,7 @@ def venues_list(request):
 # VenuesApp/views.py
 from .forms import ReservationForm
 # VenuesApp/views.py
-@login_required
+
 def reserve_venue(request, venue_id):
     venue = get_object_or_404(Venue, pk=venue_id)
 
