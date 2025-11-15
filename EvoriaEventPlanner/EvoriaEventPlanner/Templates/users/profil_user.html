@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="{% static 'css/slicknav.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'scss/style.scss' %}">
-    
+
 
 </head>
 <header>
@@ -43,31 +43,27 @@
                                     <li><a href="{% url 'index' %}">Home</a></li>
                                     <li><a href="story.html">Our Story</a></li>
                                     <li><a href="Gallery.html">Gallery</a></li>
-                                    <li><a href="#">blog <i class="ti-angle-down"></i></a>
+                                    <li><a href="#">Reservations <i class="ti-angle-down"></i></a>
                                         <ul class="submenu">
-                                            <li><a href="blog.html">blog</a></li>
-                                            <li><a href="single-blog.html">single-blog</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="#">pages <i class="ti-angle-down"></i></a>
-                                        <ul class="submenu">
-                                            <li><a href="Accommodation.html">Accommodation</a></li>
-                                            <li><a href="elements.html">elements</a></li>
+                                            <li><a href="Accommodation.html">Venues</a></li>
+                                            <li><a href="elements.html">Menus</a></li>
                                         </ul>
                                     </li>
                                     <li><a href="contact.html">Contact</a></li>
-                                    <li><a class="active" href="{% url 'profil_user' %}">
+                                    <li><a class ="active" href="#">
                                             {% if request.user.profile.avatar %}
                                             <img src="{{ request.user.profile.avatar.url }}" alt="Avatar"
                                                 class="story_thumb"
                                                 style="width:25px; height:25px; object-fit:cover; margin-right:5px;">
                                             {% else %}
-                                            <i class="fa fa-user"
-                                                style="font-size:25px; margin-right:5px;"
-                                            ></i>
+                                            <i class="fa fa-user" style="font-size:25px; margin-right:5px;"></i>
                                             {% endif %}
-                                            My Profile
-                                        </a></li>
+                                            My Profile</a>
+                                            <ul class="submenu">
+                                                <li><a href="{% url 'profil_user' %}">View Profile</a></li>
+                                                <li><a href="{% url 'logout' %}">Logout</a></li>
+                                            </ul>
+                                        </li>
                                 </ul>
                             </nav>
                         </div>

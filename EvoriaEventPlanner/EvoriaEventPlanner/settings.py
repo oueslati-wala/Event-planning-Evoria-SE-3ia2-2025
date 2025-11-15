@@ -123,3 +123,7 @@ STATICFILES_DIRS = [BASE_DIR / "EvoriaEventPlanner" / "static"]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "UserApp.User"
+LOGIN_REDIRECT_URL="index"
+LOGOUT_REDIRECT_URL="login"
+LOGIN_URL="login"
+

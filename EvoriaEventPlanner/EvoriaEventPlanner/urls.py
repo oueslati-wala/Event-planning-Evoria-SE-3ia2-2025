@@ -24,4 +24,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("users/", include("UserApp.urls")),
     path('', index, name='index'), 
+    path("",RedirectView.as_view(url="login.html")),
 ]

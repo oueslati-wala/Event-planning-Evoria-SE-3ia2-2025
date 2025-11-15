@@ -40,20 +40,29 @@
                                 <nav>
                                     <ul id="navigation">
                                         <li><a class="active" href="#">Home</a></li>
-                                        <li><a href="#">Our Story</a></li>
-                                        <li><a href="#">Gallery</a></li>
-                                        <li><a href="#">Animations</a></li>
+                                        <li><a href="story.html">Our Story</a></li>
+                                        <li><a href="Gallery.html">Gallery</a></li>
+                                        <li><a href="#">Reservations <i class="ti-angle-down"></i></a>
+                                            <ul class="submenu">
+                                                <li><a href="Accommodation.html">Venues</a></li>
+                                                <li><a href="elements.html">Menus</a></li>
+                                            </ul>
+                                        </li>
                                         <li><a href="#">Contact</a></li>
-                                        <li><a href="{% url 'profil_user' %}">
+                                        <li><a href="#">
                                                 {% if request.user.profile.avatar %}
                                                 <img src="{{ request.user.profile.avatar.url }}" alt="Avatar"
-                                                    class="avatar-img"
-                                                    style="width:30px; height:30px; border-radius:50%; object-fit:cover;">
+                                                    class="story_thumb"
+                                                    style="width:25px; height:25px; object-fit:cover; margin-right:5px;">
                                                 {% else %}
                                                 <i class="fa fa-user" style="font-size:25px; margin-right:5px;"></i>
                                                 {% endif %}
-                                                My Profile
-                                            </a></li>
+                                                My Profile</a>
+                                            <ul class="submenu">
+                                                <li><a href="{% url 'profil_user' %}">View Profile</a></li>
+                                                <li><a href="{% url 'login' %}">Logout</a></li>
+                                            </ul>
+                                        </li>
                                     </ul>
                                 </nav>
                             </div>
