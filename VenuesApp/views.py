@@ -7,6 +7,7 @@ from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from EventApp.models import Event
+from .forms import ReservationForm
 def decor_detail(request, decor_id):
     decor = get_object_or_404(
         Decor.objects.prefetch_related('venues'),  # venues = related_name on Venue.decor
@@ -18,13 +19,27 @@ def decor_detail(request, decor_id):
 
 def index(request):
     return render(request, 'index.html')  # lit ProjetWeb/templates/index.html
+from .forms import ReservationForm   # garde bien cet import en haut du fichier
+
 def venues_list(request):
     venues = Venue.objects.select_related("decor").all()
-    from EventApp.models import Event
     events = Event.objects.all().order_by("-created_at")
-    return render(request, "venues/venues_list.html", {"venues": venues, "events": events})
+
+    # 🔹 Créer une instance du formulaire pour le modal
+    reservation_form = ReservationForm()
+
+    return render(
+        request,
+        "venues/venues_list.html",
+        {
+            "venues": venues,
+            "events": events,
+            "reservation_form": reservation_form,  # 🔥 très important
+        },
+    )
+
 # VenuesApp/views.py
-from .forms import ReservationForm
+
 # VenuesApp/views.py
 
 def reserve_venue(request, venue_id):
