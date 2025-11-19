@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Formulaire Réservation{% endblock %}
+
+{% block content %}
+<style>
+  /* Bandeau titre + fleur */
+  .res-form-header{
+      position:relative;
+      padding-top:40px;
+      padding-bottom:40px;
+      text-align:center;
+  }
+  .res-form-title{
+      font-family:"Playfair Display",serif;
+      font-size:2.2rem;
+  }
+  .res-form-sub{
+      font-style:italic;
+      color:#777;
+  }
+  .res-form-flower{
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:420px;
+      transform:translate(-50%,-50%);
+      opacity:0.14;
+      pointer-events:none;
+      z-index:-1;
+  }
+
+  /* Carte formulaire */
+  .res-form-card{
+      border:none;
+      border-radius:24px;
+      padding:24px 26px 22px;
+      background:#fff;
+      box-shadow:0 14px 35px rgba(0,0,0,0.06);
+      max-width:800px;
+      margin:0 auto;
+  }
+
+  .res-form-card .form-label{
+      font-weight:500;
+      margin-bottom:.25rem;
+  }
+
+  .res-form-card input[type="text"],
+  .res-form-card input[type="number"],
+  .res-form-card input[type="datetime-local"],
+  .res-form-card input[type="date"],
+  .res-form-card input[type="time"],
+  .res-form-card textarea,
+  .res-form-card select{
+      border-radius:999px;
+      padding:.45rem 1rem;
+      border:1px solid #e3e3e3;
+      font-size:.95rem;
+  }
+
+  .res-form-card textarea{
+      border-radius:18px;
+      min-height:110px;
+  }
+
+  .btn-evoria-main{
+      background:linear-gradient(135deg,#f0a4c0,#e29a6d);
+      border:none;
+      border-radius:999px;
+      padding:.48rem 1.3rem;
+      font-weight:500;
+  }
+  .btn-evoria-main:hover{
+      filter:brightness(.95);
+  }
+  .btn-evoria-secondary{
+      border-radius:999px;
+  }
+</style>
+
+<div class="container py-5">
+
+  <!-- Bandeau titre -->
+  <section class="res-form-header mb-4">
+      <img src="{% static 'img/appointment/flower-top.png' %}" class="res-form-flower" alt="">
+      <h1 class="res-form-title">
+        {% if object %}Modifier une réservation{% else %}Créer une réservation{% endif %}
+      </h1>
+      <p class="res-form-sub">
+        Planifiez vos prestations d’animation en renseignant les détails de l’événement.
+      </p>
+  </section>
+
+  <!-- Carte formulaire -->
+  <div class="res-form-card">
+    <form method="post">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <div class="row g-3">
+        {% for field in form %}
+          <div class="col-12">
+            <label class="form-label" for="id_{{ field.name }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <div class="form-text">{{ field.help_text }}</div>
+            {% endif %}
+            {% for e in field.errors %}
+              <div class="text-danger small">{{ e }}</div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="mt-4 d-flex gap-2">
+        <button type="submit" class="btn btn-evoria-main">
+          Enregistrer
+        </button>
+        <a class="btn btn-outline-secondary btn-evoria-secondary"
+           href="{% url 'animationapp:res_list' %}">
+          Annuler
+        </a>
+      </div>
+    </form>
+  </div>
+
+</div>
+{% endblock %}

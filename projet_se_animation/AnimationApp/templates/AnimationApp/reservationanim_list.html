@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Réservations{% endblock %}
+
+{% block content %}
+<style>
+  /* ----- Bandeau titre + fleur ----- */
+  .res-page-header{
+    position:relative;
+    padding-top:40px;
+    padding-bottom:40px;
+    text-align:center;
+  }
+  .res-page-title{
+    font-family:"Playfair Display",serif;
+    font-size:2.4rem;
+  }
+  .res-page-subtitle{
+    font-style:italic;
+    color:#777;
+  }
+  .res-flower-bg{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:500px;
+    transform:translate(-50%,-50%);
+    opacity:0.14;
+    pointer-events:none;
+    z-index:-1;
+  }
+
+  /* bouton nouvelle réservation */
+  .res-top-actions{
+    margin-top:10px;
+  }
+  @media (min-width:768px){
+    .res-top-actions{
+      position:absolute;
+      right:0;
+      top:50%;
+      transform:translateY(-50%);
+    }
+  }
+  .btn-evoria-primary{
+    background:linear-gradient(135deg,#f0a4c0,#e29a6d);
+    border:none;
+    border-radius:999px;
+    font-size:.9rem;
+    padding:.45rem 1.4rem;
+  }
+  .btn-evoria-primary:hover{
+    filter:brightness(.95);
+  }
+
+  /* ----- Cartes de réservation ----- */
+  .res-card{
+    border:none;
+    border-radius:22px;
+    overflow:hidden;
+    background:#fff;
+    box-shadow:0 14px 35px rgba(0,0,0,0.05);
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .res-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 20px 45px rgba(0,0,0,0.08);
+  }
+
+  .res-card .card-header{
+    background:#fff;
+    border-bottom:none;
+    padding:14px 20px 6px;
+  }
+  .res-card .card-body{
+    padding:8px 20px 16px;
+  }
+  .res-card .card-footer{
+    padding:0 20px 16px;
+    background:transparent;
+    border:none;
+  }
+
+  .res-avatar{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    object-fit:cover;
+    box-shadow:0 4px 10px rgba(0,0,0,0.12);
+  }
+
+  .res-anim-name{
+    font-weight:600;
+  }
+
+  .res-label{
+    font-size:.8rem;
+    color:#999;
+  }
+  .res-value{
+    font-size:.9rem;
+  }
+
+  .res-total{
+    font-weight:600;
+    color:#444;
+  }
+
+  /* statut chip */
+  .res-status{
+    padding:3px 11px;
+    border-radius:999px;
+    font-size:.75rem;
+    font-weight:500;
+  }
+  .res-status-confirme{
+    background:rgba(64,176,100,.11);
+    color:#2f8b5b;
+  }
+  .res-status-annule{
+    background:rgba(215,91,91,.12);
+    color:#c75656;
+  }
+  .res-status-enattente{
+    background:rgba(160,160,160,.12);
+    color:#555;
+  }
+
+  .res-card .btn{
+    border-radius:999px;
+    font-size:.8rem;
+    padding:.3rem .85rem;
+  }
+
+  /* petite touche pagination douce */
+  .pagination .page-link{
+    border-radius:999px !important;
+  }
+  .modal {
+    z-index: 20000 !important;
+}
+
+.modal-backdrop {
+    z-index: 19900 !important;
+}
+
+</style>
+
+<div class="container py-5">
+
+  <!-- Bandeau titre + fleur + bouton -->
+  <section class="res-page-header mb-5">
+    <img src="{% static 'img/appointment/flower-top.png' %}"
+         class="res-flower-bg" alt="Décor floral">
+    <h1 class="res-page-title">Mes réservations</h1>
+    <p class="res-page-subtitle">
+      Suivez vos demandes et confirmations pour chaque prestation d’animation.
+    </p>
+
+    <div class="res-top-actions">
+      <a class="btn btn-evoria-primary"
+         href="{% url 'animationapp:res_create' %}">
+        Nouvelle réservation
+      </a>
+    </div>
+  </section>
+
+  {% if object_list %}
+    <div class="row g-4 justify-content-center">
+      {% for r in object_list %}
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="card res-card h-100">
+
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <span class="small text-muted">Réservation #{{ r.pk }}</span>
+              <span class="res-status
+                  {% if r.statut == 'confirme' %}res-status-confirme
+                  {% elif r.statut == 'annule' %}res-status-annule
+                  {% else %}res-status-enattente{% endif %}">
+                {{ r.get_statut_display }}
+              </span>
+            </div>
+
+            <div class="card-body">
+              <div class="d-flex align-items-center gap-2 mb-3">
+                {% if r.animateur.photo %}
+                  <img src="{{ r.animateur.photo.url }}" class="res-avatar" alt="{{ r.animateur.nom }}">
+                {% else %}
+                  <img src="{% static 'img/lawyers/lawyers_2.jpg' %}" class="res-avatar" alt="Animateur">
+                {% endif %}
+                <div class="res-anim-name">{{ r.animateur.nom }}</div>
+              </div>
+
+              <div class="mb-2">
+                <div class="res-label"><i class="ti-calendar"></i> Début</div>
+                <div class="res-value">{{ r.date_debut|date:"d/m/Y H:i" }}</div>
+              </div>
+              <div class="mb-2">
+                <div class="res-label"><i class="ti-calendar"></i> Fin</div>
+                <div class="res-value">{{ r.date_fin|date:"d/m/Y H:i" }}</div>
+              </div>
+              <div class="mb-2">
+                <div class="res-label"><i class="ti-location-pin"></i> Lieu</div>
+                <div class="res-value">{{ r.lieu }}</div>
+              </div>
+              <div>
+                <div class="res-label"><i class="ti-money"></i> Total</div>
+                <div class="res-total">{{ r.prix_total }} DT</div>
+              </div>
+            </div>
+
+            <div class="card-footer d-flex gap-2">
+              <a class="btn btn-outline-secondary btn-sm flex-grow-1"
+                 href="{% url 'animationapp:res_detail' r.pk %}">
+                Voir
+              </a>
+
+              <a class="btn btn-outline-primary btn-sm flex-grow-1"
+                 href="{% url 'animationapp:res_update' r.pk %}">
+                Éditer
+              </a>
+
+              <!-- Bouton qui ouvre le modal -->
+              <button type="button"
+                      class="btn btn-outline-danger btn-sm flex-grow-1"
+                      data-bs-toggle="modal"
+                      data-bs-target="#deleteModal-{{ r.pk }}">
+                Supprimer
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Modal de confirmation -->
+          <div class="modal fade" id="deleteModal-{{ r.pk }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content" style="border-radius:18px;">
+                <div class="modal-header border-0">
+                  <h5 class="modal-title">Supprimer la réservation #{{ r.pk }} ?</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                  <p>Voulez-vous vraiment supprimer cette réservation pour
+                    <strong>{{ r.animateur.nom }}</strong> ?</p>
+                </div>
+                <div class="modal-footer border-0">
+                  <button type="button" class="btn btn-outline-secondary btn-sm"
+                          data-bs-dismiss="modal">Annuler</button>
+
+                  <form method="post"
+                        action="{% url 'animationapp:res_delete' r.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm">
+                      Confirmer la suppression
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- fin modal -->
+
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center">Aucune réservation pour le moment.</div>
+  {% endif %}
+
+  {% if is_paginated %}
+    <nav class="mt-4 d-flex justify-content-center">
+      <ul class="pagination">
+        {% if page_obj.has_previous %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Précédent</a>
+          </li>
+        {% endif %}
+        <li class="page-item disabled">
+          <span class="page-link">Page {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+        </li>
+        {% if page_obj.has_next %}
+          <li class="page-item">
+            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Suivant</a>
+          </li>
+        {% endif %}
+      </ul>
+    </nav>
+  {% endif %}
+</div>
+{% endblock %}

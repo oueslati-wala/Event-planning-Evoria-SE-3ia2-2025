@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Détail Réservation{% endblock %}
+
+{% block content %}
+<style>
+/* ----- Bandeau titre + fleur ----- */
+.res-detail-header{
+    position:relative;
+    padding-top:40px;
+    padding-bottom:40px;
+    text-align:center;
+}
+.res-detail-title{
+    font-family:"Playfair Display",serif;
+    font-size:2.4rem;
+}
+.res-detail-sub{
+    font-style:italic;
+    color:#777;
+}
+.res-detail-flower{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:450px;
+    transform:translate(-50%,-50%);
+    opacity:0.14;
+    pointer-events:none;
+    z-index:-1;
+}
+
+/* ----- Carte détail ----- */
+.res-detail-card{
+    border:none;
+    border-radius:24px;
+    padding:25px 26px;
+    background:#fff;
+    box-shadow:0 14px 35px rgba(0,0,0,0.06);
+    max-width:800px;
+    margin:auto;
+}
+
+/* liste infos */
+.res-detail-info dt{
+    font-weight:600;
+    color:#444;
+    font-family:"Playfair Display",serif;
+    margin-top:10px;
+}
+.res-detail-info dd{
+    margin-bottom:10px;
+    color:#666;
+}
+
+/* statut chip */
+.res-status{
+    padding:4px 12px;
+    border-radius:999px;
+    font-size:.8rem;
+    font-weight:600;
+}
+.res-status-confirme{
+    background:rgba(64,176,100,.12);
+    color:#2f8b5b;
+}
+.res-status-annule{
+    background:rgba(215,91,91,.12);
+    color:#c75656;
+}
+.res-status-attente{
+    background:rgba(150,150,150,.12);
+    color:#555;
+}
+
+/* Boutons */
+.btn-evoria-main{
+    background:linear-gradient(135deg,#f0a4c0,#e29a6d);
+    border:none;
+    border-radius:999px;
+    padding:.48rem 1.3rem;
+    font-weight:500;
+}
+.btn-evoria-main:hover{
+    filter:brightness(.95);
+}
+.btn-evoria-secondary{
+    border-radius:999px;
+}
+</style>
+
+<div class="container py-5">
+
+    <!-- Bannière -->
+    <section class="res-detail-header mb-5">
+        <img src="{% static 'img/appointment/flower-top.png' %}" class="res-detail-flower">
+
+        <h1 class="res-detail-title">Réservation #{{ object.pk }}</h1>
+        <p class="res-detail-sub">Détails complets de votre prestation</p>
+
+        <div class="mt-3 d-flex justify-content-center gap-2">
+            <a class="btn btn-evoria-main"
+               href="{% url 'animationapp:res_update' object.pk %}">
+               Éditer
+            </a>
+
+            <a class="btn btn-outline-danger btn-evoria-secondary"
+               href="{% url 'animationapp:res_delete' object.pk %}">
+               Supprimer
+            </a>
+
+            <a class="btn btn-outline-secondary btn-evoria-secondary"
+               href="{% url 'animationapp:res_list' %}">
+               Retour
+            </a>
+        </div>
+    </section>
+
+    <!-- Carte -->
+    <div class="res-detail-card">
+
+        <dl class="row res-detail-info">
+
+            <dt class="col-sm-4">Animateur</dt>
+            <dd class="col-sm-8">
+                {{ object.animateur.nom }}
+            </dd>
+
+            <dt class="col-sm-4">Début</dt>
+            <dd class="col-sm-8">{{ object.date_debut|date:"d/m/Y H:i" }}</dd>
+
+            <dt class="col-sm-4">Fin</dt>
+            <dd class="col-sm-8">{{ object.date_fin|date:"d/m/Y H:i" }}</dd>
+
+            <dt class="col-sm-4">Lieu</dt>
+            <dd class="col-sm-8">{{ object.lieu }}</dd>
+
+            <dt class="col-sm-4">Statut</dt>
+            <dd class="col-sm-8">
+                <span class="res-status
+                    {% if object.statut == 'confirme' %}res-status-confirme
+                    {% elif object.statut == 'annule' %}res-status-annule
+                    {% else %}res-status-attente{% endif %}">
+                    {{ object.get_statut_display }}
+                </span>
+            </dd>
+
+            <dt class="col-sm-4">Total</dt>
+            <dd class="col-sm-8 fw-semibold">{{ object.prix_total }} DT</dd>
+
+        </dl>
+    </div>
+
+</div>
+{% endblock %}

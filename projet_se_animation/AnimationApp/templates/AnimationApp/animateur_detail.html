@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Détail Animateur{% endblock %}
+
+{% block content %}
+<style>
+/* ----- Titre + fleur ----- */
+.anim-detail-header{
+    position:relative;
+    padding-top:40px;
+    padding-bottom:40px;
+    text-align:center;
+}
+.anim-detail-title{
+    font-family:"Playfair Display",serif;
+    font-size:2.4rem;
+}
+.anim-detail-sub{
+    font-style:italic;
+    color:#777;
+}
+.anim-detail-flower{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:450px;
+    transform:translate(-50%,-50%);
+    opacity:0.14;
+    pointer-events:none;
+    z-index:-1;
+}
+
+/* ----- Carte détail animateur ----- */
+.anim-detail-card{
+    border:none;
+    border-radius:24px;
+    padding:25px;
+    background:#fff;
+    box-shadow:0 14px 35px rgba(0,0,0,0.06);
+    max-width:850px;
+    margin:auto;
+}
+
+/* photo */
+.anim-detail-photo{
+    width:100%;
+    max-height:380px;
+    object-fit:cover;
+    border-radius:18px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.10);
+}
+
+/* liste info */
+.anim-detail-info dt{
+    font-weight:600;
+    color:#444;
+    font-family:"Playfair Display",serif;
+    margin-top:10px;
+}
+.anim-detail-info dd{
+    margin-bottom:10px;
+    color:#666;
+}
+
+/* Boutons */
+.btn-evoria-main{
+    background:linear-gradient(135deg,#f0a4c0,#e29a6d);
+    border:none;
+    border-radius:999px;
+    padding:.48rem 1.3rem;
+    font-weight:500;
+}
+.btn-evoria-main:hover{
+    filter:brightness(.95);
+}
+
+.btn-evoria-secondary{
+    border-radius:999px;
+}
+
+</style>
+
+<div class="container py-5">
+
+    <!-- Bandeau titre -->
+    <section class="anim-detail-header mb-5">
+        <img src="{% static 'img/appointment/flower-top.png' %}" class="anim-detail-flower">
+
+        <h1 class="anim-detail-title">{{ object.nom }}</h1>
+        <p class="anim-detail-sub">Fiche détaillée de l’animateur</p>
+
+        <div class="mt-3 d-flex justify-content-center gap-2">
+            <a href="{% url 'animationapp:res_create' %}?animateur={{ object.pk }}"
+               class="btn btn-evoria-main">
+                Réserver
+            </a>
+
+            <a href="{% url 'animationapp:anim_list' %}"
+               class="btn btn-outline-secondary btn-evoria-secondary">
+                Retour
+            </a>
+        </div>
+    </section>
+
+    <!-- Carte -->
+    <div class="anim-detail-card">
+
+        <!-- PHOTO -->
+        <div class="mb-4">
+            {% if object.photo %}
+                <img src="{{ object.photo.url }}" 
+                     class="anim-detail-photo" 
+                     alt="{{ object.nom }}">
+            {% else %}
+                <img src="{% static 'img/lawyers/lawyers_2.jpg' %}" 
+                     class="anim-detail-photo" 
+                     alt="Image défaut">
+            {% endif %}
+        </div>
+
+        <!-- Infos -->
+        <dl class="row anim-detail-info">
+            <dt class="col-sm-4">Type</dt>
+            <dd class="col-sm-8">{{ object.type_animation }}</dd>
+
+            <dt class="col-sm-4">Description</dt>
+            <dd class="col-sm-8">{{ object.description|default:"—" }}</dd>
+
+            <dt class="col-sm-4">Prix base</dt>
+            <dd class="col-sm-8">{{ object.prix_base }} DT</dd>
+
+            <dt class="col-sm-4">Capacité max</dt>
+            <dd class="col-sm-8">{{ object.capacite_max }}</dd>
+
+            <dt class="col-sm-4">Lieu</dt>
+            <dd class="col-sm-8">{{ object.get_interieur_exterieur_display }}</dd>
+
+            <dt class="col-sm-4">Disponible</dt>
+            <dd class="col-sm-8">
+                {% if object.disponible %}
+                    <span class="text-success">Oui</span>
+                {% else %}
+                    <span class="text-danger">Non</span>
+                {% endif %}
+            </dd>
+
+            <dt class="col-sm-4">Tags</dt>
+            <dd class="col-sm-8">{{ object.tags|default:"—" }}</dd>
+        </dl>
+    </div>
+
+</div>
+{% endblock %}

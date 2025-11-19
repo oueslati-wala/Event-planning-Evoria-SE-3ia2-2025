@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Nos animateurs{% endblock %}
+
+{% block content %}
+<style>
+  .anim-card{
+    border:none;
+    border-radius:22px;
+    overflow:hidden;
+    background:#fff;
+    box-shadow:0 14px 35px rgba(0,0,0,0.05);
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .anim-card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 20px 45px rgba(0,0,0,0.08);
+  }
+
+  .anim-card-img{
+    width:100%;
+    height:240px;
+    object-fit:cover;
+    transition:transform .4s ease;
+  }
+  .anim-card:hover .anim-card-img{
+    transform:scale(1.06);
+  }
+
+  .anim-card .card-body{padding:18px 20px 16px;}
+  .anim-card .card-title{
+    font-family:"Playfair Display",serif;
+    font-size:1.15rem;
+    margin-bottom:2px;
+  }
+  .anim-description{
+    font-size:.9rem;
+    color:#666;
+    margin-top:6px;
+  }
+
+  .anim-meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:.4rem 1rem;
+    margin-top:10px;
+    font-size:.8rem;
+    color:#777;
+  }
+  .anim-card .card-footer{
+    padding:0 20px 16px;
+    background:transparent;
+    border:none;
+  }
+  .anim-card .btn{
+    border-radius:999px;
+    font-size:.85rem;
+  }
+  .anim-card .btn-primary{
+    background:linear-gradient(135deg,#f0a4c0,#e29a6d);
+    border:none;
+  }
+  .anim-card .btn-primary:hover{filter:brightness(.95);}
+
+  /* ----- Titre + fleur ----- */
+  .anim-page-header{
+    position:relative;
+    padding-top:40px;
+    padding-bottom:40px;
+    text-align:center;
+  }
+  .anim-page-title{
+    font-family:"Playfair Display",serif;
+    font-size:2.4rem;
+  }
+  .anim-page-subtitle{
+    font-style:italic;
+    color:#777;
+  }
+  .anim-flower-bg{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:500px;
+    transform:translate(-50%,-50%);
+    opacity:0.14;
+    pointer-events:none;
+    z-index:-1;
+  }
+</style>
+
+<div class="container py-5">
+
+  <!-- Bandeau titre avec fleur en fond -->
+  <section class="anim-page-header mb-5">
+    <img src="{% static 'img/appointment/flower-top.png' %}" class="anim-flower-bg" alt="Décor floral">
+    <h1 class="anim-page-title">Nos animateurs</h1>
+    <p class="anim-page-subtitle">
+      Des partenaires soigneusement sélectionnés pour faire de vos événements des moments inoubliables.
+    </p>
+  </section>
+
+  {% if animations %}
+    <div class="row g-4 justify-content-center">
+      {% for a in animations %}
+        <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+          <div class="card anim-card h-100">
+            {% if a.photo %}
+              <img src="{{ a.photo.url }}" class="card-img-top anim-card-img" alt="{{ a.nom }}">
+            {% else %}
+              <img src="{% static 'img/lawyers/lawyers_1.jpg' %}" class="card-img-top anim-card-img" alt="{{ a.nom }}">
+            {% endif %}
+
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-start mb-1">
+                <div>
+                  <h5 class="card-title mb-1">{{ a.nom }}</h5>
+                  <div class="text-muted small">{{ a.type_animation }}</div>
+                </div>
+                {% if a.disponible %}
+                  <span class="text-success small fw-semibold">Disponible</span>
+                {% else %}
+                  <span class="text-danger small fw-semibold">Indisponible</span>
+                {% endif %}
+              </div>
+
+              {% if a.description %}
+                <p class="card-text anim-description">
+                  {{ a.description|truncatechars:120 }}
+                </p>
+              {% endif %}
+
+              <div class="anim-meta mt-2">
+                <span><i class="ti-money"></i> {{ a.prix_base }} DT</span>
+                <span><i class="ti-user"></i> {{ a.capacite_max }} pers.</span>
+                <span><i class="ti-location-pin"></i> {{ a.get_interieur_exterieur_display }}</span>
+              </div>
+            </div>
+
+            <div class="card-footer d-flex gap-2 pt-0">
+              <a class="btn btn-outline-secondary btn-sm flex-grow-1"
+                 href="{% url 'animationapp:anim_detail' a.pk %}">Voir</a>
+              <a class="btn btn-primary btn-sm flex-grow-1"
+                 href="{% url 'animationapp:res_create' %}?animateur={{ a.pk }}">Réserver</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="alert alert-info text-center">Aucun animateur pour le moment.</div>
+  {% endif %}
+</div>
+{% endblock %}
