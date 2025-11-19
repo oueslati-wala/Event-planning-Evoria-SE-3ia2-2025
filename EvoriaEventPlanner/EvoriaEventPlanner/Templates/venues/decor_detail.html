@@ -1,0 +1,237 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>{{ decor.name }} – Décor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- CSS (mêmes que index & venues_list) -->
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+  <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+  <link rel="stylesheet" href="{% static 'css/themify-icons.css' %}">
+  <link rel="stylesheet" href="{% static 'css/nice-select.css' %}">
+  <link rel="stylesheet" href="{% static 'css/flaticon.css' %}">
+  <link rel="stylesheet" href="{% static 'css/gijgo.css' %}">
+  <link rel="stylesheet" href="{% static 'css/slicknav.css' %}">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+  <style>
+    .decor_hero .text_inner h3 {
+      font-size: 36px;
+      letter-spacing: 3px;
+    }
+    .decor_hero .text_inner span {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      font-size: 13px;
+      letter-spacing: 2px;
+    }
+
+    .decor_detail_section {
+      padding: 60px 0 80px 0;
+    }
+    .decor_img {
+      border-radius: 16px;
+      width: 100%;
+      max-height: 380px;
+      object-fit: cover;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+    }
+    .decor_info strong {
+      font-weight: 600;
+    }
+
+    .venue_card {
+      border-radius: 16px;
+      overflow: hidden;
+      background: #fff;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+      transition: transform .25s ease, box-shadow .25s ease;
+      height: 100%;
+    }
+    .venue_card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+    }
+    .venue_card img {
+      height: 200px;
+      width: 100%;
+      object-fit: cover;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER (même que index & venues) -->
+  <header>
+    <div class="header-area">
+      <div id="sticky-header" class="main-header-area">
+        <div class="container">
+          <div class="row align-items-center">
+            <div class="col-xl-3 col-lg-3">
+              <div class="logo-img">
+                <a href="{% url 'index' %}">
+                  <img src="{% static 'img/logo1.png' %}" alt="">
+                </a>
+              </div>
+            </div>
+            <div class="col-xl-9 col-lg-9">
+              <div class="main-menu d-none d-lg-block">
+                <nav>
+                  <ul id="navigation">
+                    <li><a href="{% url 'index' %}">Home</a></li>
+                    <li><a href="#">Our Story</a></li>
+                    <li><a href="#">Gallery</a></li>
+                    <li><a href="{% url 'venues_list' %}">Venues</a></li>
+                    <li><a class="active" href="#">Décors</a></li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+
+            <div class="col-12">
+              <div class="mobile_menu d-block d-lg-none"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <div class="slider_area decor_hero">
+    <div class="slider_area_inner slider_bg_1 overlay2">
+      <div class="slider_text text-center">
+        <div class="text_inner">
+          <img src="{% static 'img/banner/ornaments.png' %}" alt="">
+          <h3>{{ decor.name }}</h3>
+          <span>Décor & Ambiance</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DECOR SECTION -->
+  <div class="decor_detail_section">
+    <div class="container">
+      <div class="row g-5">
+
+        <!-- Image -->
+        <div class="col-lg-6">
+          {% if decor.image %}
+            <img src="{{ decor.image.url }}" class="decor_img" alt="{{ decor.name }}">
+          {% else %}
+            <img src="{% static 'img/placeholder.png' %}" class="decor_img" alt="Décor">
+          {% endif %}
+        </div>
+
+        <!-- Infos -->
+        <div class="col-lg-6 decor_info">
+          <h3>{{ decor.name }}</h3>
+          <p><strong>Catégorie :</strong> {{ decor.category|default:"—" }}</p>
+          <p><strong>Prix :</strong> {{ decor.price|default:"—" }} TND</p>
+          <p>
+            <strong>Disponibilité :</strong>
+            {% if decor.available %}
+              <span class="text-success">Disponible</span>
+            {% else %}
+              <span class="text-danger">Indisponible</span>
+            {% endif %}
+          </p>
+        </div>
+
+      </div>
+
+      <hr class="my-5">
+
+      <!-- Venues utilisant ce décor -->
+      <h3 class="text-center mb-4">Venues associées</h3>
+
+      {% if decor.venues.all %}
+        <div class="row g-4">
+          {% for v in decor.venues.all %}
+            <div class="col-xl-4 col-lg-4 col-md-6">
+              <div class="venue_card">
+                {% if v.image %}
+                  <img src="{{ v.image.url }}" alt="{{ v.nom_v }}">
+                {% else %}
+                  <img src="{% static 'img/placeholder.png' %}" alt="">
+                {% endif %}
+
+                <div class="p-3">
+                  <h5>{{ v.nom_v }}</h5>
+
+                  {% if v.adresse_v %}
+                    <div class="text-muted small">{{ v.adresse_v }}</div>
+                  {% endif %}
+
+                  <div class="text-muted small">
+                    Places: {{ v.nb_place }} • Prix: {{ v.prix }} TND
+                  </div>
+
+                  <a href="{% url 'venues_list' %}" class="btn btn-sm btn-outline-primary mt-2">
+                    Voir toutes les venues
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <p class="text-muted text-center">Aucun venue associé.</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer_top">
+      <div class="container">
+        <div class="row">
+          <div class="col-xl-12">
+            <div class="quick_links">
+              <ul>
+                <li><a href="{% url 'index' %}">Home</a></li>
+                <li><a href="#">Our Story</a></li>
+                <li><a href="#">Gallery</a></li>
+                <li><a href="{% url 'venues_list' %}">Venues</a></li>
+                <li><a href="#">Contact</a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="copy-right_text">
+      <div class="container">
+        <div class="footer_border"></div>
+        <p class="copy_right text-center">
+          Copyright &copy;<script>document.write(new Date().getFullYear());</script>
+          All rights reserved | Template by
+          <a href="https://colorlib.com" target="_blank">Colorlib</a>
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JS (mêmes que index) -->
+  <script src="{% static 'js/vendor/jquery-1.12.4.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/owl.carousel.min.js' %}"></script>
+  <script src="{% static 'js/jquery.slicknav.min.js' %}"></script>
+  <script src="{% static 'js/main.js' %}"></script>
+
+</body>
+</html>

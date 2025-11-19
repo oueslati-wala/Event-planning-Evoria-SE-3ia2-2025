@@ -20,9 +20,15 @@ from django.urls import path
 from django.urls import include
 from django.views.generic import RedirectView
 from .views import index
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("users/", include("UserApp.urls")),
     path('', index, name='index'), 
     path("",RedirectView.as_view(url="login.html")),
+    path('', include('VenuesApp.urls')),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
