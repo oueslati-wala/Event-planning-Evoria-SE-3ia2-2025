@@ -24,11 +24,19 @@ from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls),
+
+    # ✅ Une seule racine : page d’accueil commune
+    path("", index, name="index"),
+
+    # ✅ Routes des différentes apps
     path("users/", include("UserApp.urls")),
-    path('', index, name='index'), 
-    path("",RedirectView.as_view(url="login.html")),
-    path('', include('VenuesApp.urls')),
+    path("venues/", include("VenuesApp.urls")),
+    path("animation/", include("AnimationApp.urls")),
+    # si besoin plus tard :
+    # path("events/", include("EventApp.urls")),
+    # path("decors/", include("decors.urls")),
 ]
+
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

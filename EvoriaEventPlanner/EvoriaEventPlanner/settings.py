@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     "UserApp",
     "EventApp",
     "VenuesApp",
+    "AnimationApp",
+
 ]
 
 MIDDLEWARE = [

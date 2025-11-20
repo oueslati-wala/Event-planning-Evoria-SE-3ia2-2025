@@ -1,0 +1,19 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../projet_se"
+		},
+		{
+			"path": "../../static"
+		},
+		{
+			"path": "../../templates"
+		},
+		{
+			"path": "../../venv"
+		}
+	]
+}

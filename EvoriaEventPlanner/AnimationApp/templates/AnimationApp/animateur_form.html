@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Formulaire Animateur{% endblock %}
+
+{% block content %}
+<style>
+  /* Bandeau titre + fleur */
+  .anim-form-header{
+      position:relative;
+      padding-top:40px;
+      padding-bottom:40px;
+      text-align:center;
+  }
+  .anim-form-title{
+      font-family:"Playfair Display",serif;
+      font-size:2.2rem;
+  }
+  .anim-form-sub{
+      font-style:italic;
+      color:#777;
+  }
+  .anim-form-flower{
+      position:absolute;
+      top:50%;
+      left:50%;
+      width:420px;
+      transform:translate(-50%,-50%);
+      opacity:0.14;
+      pointer-events:none;
+      z-index:-1;
+  }
+
+  /* Carte formulaire */
+  .anim-form-card{
+      border:none;
+      border-radius:24px;
+      padding:24px 26px 22px;
+      background:#fff;
+      box-shadow:0 14px 35px rgba(0,0,0,0.06);
+      max-width:800px;
+      margin:0 auto;
+  }
+
+  .anim-form-card .form-label{
+      font-weight:500;
+      margin-bottom:.25rem;
+  }
+
+  .anim-form-card input[type="text"],
+  .anim-form-card input[type="number"],
+  .anim-form-card input[type="file"],
+  .anim-form-card textarea,
+  .anim-form-card select{
+      border-radius:999px;
+      padding:.45rem 1rem;
+      border:1px solid #e3e3e3;
+      font-size:.95rem;
+  }
+
+  .anim-form-card textarea{
+      border-radius:18px;
+      min-height:110px;
+  }
+
+  .btn-evoria-main{
+      background:linear-gradient(135deg,#f0a4c0,#e29a6d);
+      border:none;
+      border-radius:999px;
+      padding:.48rem 1.3rem;
+      font-weight:500;
+  }
+  .btn-evoria-main:hover{
+      filter:brightness(.95);
+  }
+  .btn-evoria-secondary{
+      border-radius:999px;
+  }
+</style>
+
+<div class="container py-5">
+
+  <!-- Bandeau titre -->
+  <section class="anim-form-header mb-4">
+      <img src="{% static 'img/appointment/flower-top.png' %}" class="anim-form-flower" alt="">
+      <h1 class="anim-form-title">
+        {% if object %}Modifier un animateur{% else %}Créer un animateur{% endif %}
+      </h1>
+      <p class="anim-form-sub">
+        Renseignez les informations nécessaires pour l’ajouter à vos partenaires Evoria.
+      </p>
+  </section>
+
+  <!-- Carte formulaire -->
+  <div class="anim-form-card">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+
+      <div class="row g-3">
+        {% for field in form %}
+          <div class="col-12">
+            <label class="form-label" for="id_{{ field.name }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}
+              <div class="form-text">{{ field.help_text }}</div>
+            {% endif %}
+            {% for e in field.errors %}
+              <div class="text-danger small">{{ e }}</div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+
+      <div class="mt-4 d-flex gap-2">
+        <button type="submit" class="btn btn-evoria-main">
+          Enregistrer
+        </button>
+        <a class="btn btn-outline-secondary btn-evoria-secondary"
+           href="{% url 'animationapp:anim_list' %}">
+          Annuler
+        </a>
+      </div>
+    </form>
+  </div>
+
+</div>
+{% endblock %}

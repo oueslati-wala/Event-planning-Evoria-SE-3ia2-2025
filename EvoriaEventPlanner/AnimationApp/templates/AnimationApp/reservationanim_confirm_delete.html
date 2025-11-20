@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Supprimer Réservation{% endblock %}
+{% block content %}
+  <h1 class="h5 mb-3">Confirmer la suppression</h1>
+  <p>Voulez-vous vraiment supprimer la réservation #{{ object.pk }} de "{{ object.animateur.nom }}" ?</p>
+  <form method="post">
+    {% csrf_token %}
+    <div class="d-flex gap-2 mt-3">
+      <button type="submit" class="btn btn-danger">Supprimer</button>
+      <a class="btn btn-secondary" href="{% url 'animationapp:res_list' %}">Annuler</a>
+    </div>
+  </form>
+{% endblock %}

@@ -64,7 +64,7 @@ class User(AbstractUser):
     ]
     theme = models.CharField(max_length=50, choices=Themes, default="light")
     role = models.ForeignKey(
-        Role, on_delete=models.SET_NULL, null=True, related_name="users", default=2
+        Role, on_delete=models.SET_NULL, null=True, blank=True, related_name="users"
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

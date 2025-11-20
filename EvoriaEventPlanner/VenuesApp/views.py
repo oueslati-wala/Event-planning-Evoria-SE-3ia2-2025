@@ -133,3 +133,11 @@ def user_reservations(request):
     reservations = VenueReservation.objects.filter(user=request.user)
     return render(request, 'venues/user_reservations.html', {'reservations': reservations})
 
+@login_required
+def friends_reservations(request):
+    reservations = VenueReservation.objects.exclude(user=request.user)
+    return render(request, 'venues/user_reservations.html', {
+        'reservations': reservations,
+        'page_title': 'Réservations de mes amis'
+    })
+
