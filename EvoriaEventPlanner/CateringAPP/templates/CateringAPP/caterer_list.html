@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container">
+  <h2 style="margin:0 0 0.75rem">Liste des traiteurs</h2>
+  <a href="{% url 'CateringAPP:caterer_create' %}" class="boxed-btn mb-3">Ajouter un traiteur</a>
+
+  <div class="row">
+      {% for obj in liste %}
+        <div class="col-xl-4 col-lg-4 col-md-6 mb-4">
+          <div class="venue_card" id="caterer-{{ obj.pk }}">
+            <div class="venue_card_body">
+              <div class="venue_title">{{ obj.company_name|default:obj.name }}</div>
+              <div class="venue_info_line"><strong>Nom :</strong> {{ obj.name }}</div>
+              <div class="venue_info_line"><strong>Contact :</strong> {{ obj.phone }}{% if obj.email %} — {{ obj.email }}{% endif %}</div>
+              <div class="venue_info_line"><strong>Statut :</strong> {{ obj.get_status_display }}</div>
+              {% if obj.website %}<div class="venue_info_line"><a href="{{ obj.website }}" target="_blank">Site web</a></div>{% endif %}
+            </div>
+            <div class="venue_footer" style="display: flex; justify-content: space-between; align-items: center;">
+              <a href="{% url 'CateringAPP:caterer_update' obj.pk %}" class="boxed-btn4 btn-venue">Éditer</a>
+              <button class="boxed-btn5 btn-venue" data-toggle="modal" data-target="#deleteModal" data-delete-url="{% url 'CateringAPP:caterer_delete' obj.pk %}" data-item-id="{{ obj.pk }}">Supprimer</button>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-xl-12">
+          <div class="alert alert-info text-center">Aucun traiteur pour le moment.</div>
+        </div>
+      {% endfor %}
+    </div>
+</section>
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Confirmer la suppression</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Êtes-vous sûr de vouloir supprimer ce traiteur ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="boxed-btn2" data-dismiss="modal">Annuler</button>
+        <button type="button" class="boxed-btn5" id="confirmDelete">Supprimer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$('#deleteModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget);
+  var url = button.data('delete-url');
+  var itemId = button.data('item-id');
+  var modal = $(this);
+  modal.find('#confirmDelete').data('url', url).data('item-id', itemId);
+});
+
+$('#confirmDelete').click(function() {
+  var url = $(this).data('url');
+  var itemId = $(this).data('item-id');
+  $.ajax({
+    url: url,
+    type: 'POST',
+    headers: {'X-CSRFToken': '{{ csrf_token }}'},
+    success: function(data) {
+      if (data.success) {
+        $('#caterer-' + itemId).closest('.col-xl-4').remove();
+      }
+    }
+  });
+  $('#deleteModal').modal('hide');
+});
+</script>
+{% endblock %}

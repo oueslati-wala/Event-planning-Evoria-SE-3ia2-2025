@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Nos animateurs{% endblock %}
+
+{% block content %}
+<!-- hero / slider area -->
+  <div class="slider_area venues_hero">
+    <div class="slider_area_inner slider_bg_1 overlay2">
+      <div class="slider_text text-center">
+        <div class="text_inner">
+          <img src="{% static 'img/banner/ornaments.png' %}" alt="">
+          <h4>Find your dream place</h4>
+          <h3>Our Animators</h3>
+          <span>Pick the perfect location for your event</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<style>
+  .venues_hero .slider_area_inner { display:flex; align-items:center; justify-content:center; min-height:280px; }
+  .venues_hero .text_inner h3 { font-size:36px; text-transform:uppercase; letter-spacing:3px; }
+  .venues_hero .text_inner span { display:inline-block; margin-top:10px; padding:4px 14px; border-radius:20px; background:rgba(255,255,255,0.12); color:#fff; font-size:13px; letter-spacing:2px; }
+
+  .venue_list_area { padding:80px 0 90px 0; position:relative; }
+
+  .venue_card { border-radius:16px; overflow:hidden; background:#fff; box-shadow:0 12px 30px rgba(0,0,0,0.08); transition:transform .25s ease, box-shadow .25s ease; height:100%; display:flex; flex-direction:column; }
+  .venue_card:hover { transform:translateY(-6px); box-shadow:0 20px 45px rgba(0,0,0,0.12); }
+  .venue_card .card-img-top { height:220px; width:100%; object-fit:cover; display:block; }
+  .venue_badge { position:absolute; top:14px; left:14px; background:#ff4e8a; color:#fff; font-size:11px; letter-spacing:1px; text-transform:uppercase; padding:4px 10px; border-radius:20px; }
+  .venue_price_badge { position:absolute; bottom:12px; right:14px; background:rgba(0,0,0,0.65); color:#fff; font-size:13px; padding:5px 12px; border-radius:20px; }
+
+  .venue_card_body { padding:18px 18px 10px 18px; flex:1 1 auto; }
+  .venue_title { font-size:18px; font-weight:600; margin-bottom:4px; }
+  .venue_info_line { font-size:13px; margin-bottom:4px; }
+  .venue_info_line strong { font-weight:600; }
+  .venue_footer { border-top:1px solid #f3f3f3; padding:10px 18px 14px 18px; font-size:13px; display:flex; justify-content:space-between; align-items:center; }
+  .venue_meta { color:#777; }
+  .btn-venue { border-radius:25px; padding:6px 18px; font-size:13px; text-transform:uppercase; letter-spacing:1px; }
+</style>
+
+<div class="venue_list_area">
+  <div class="container">
+
+  <!-- Bandeau titre avec fleur en fond -->
+  <section class="anim-page-header mb-5">
+    <img src="{% static 'img/appointment/flower-top.png' %}" class="anim-flower-bg" alt="Décor floral">
+    <h1 class="anim-page-title">Nos animateurs</h1>
+    <p class="anim-page-subtitle">
+      Des partenaires soigneusement sélectionnés pour faire de vos événements des moments inoubliables.
+    </p>
+  </section>
+
+  {% if animations %}
+    <div class="row">
+      {% for a in animations %}
+        <div class="col-xl-4 col-lg-4 col-md-6 mb-4">
+          <div class="venue_card">
+            <div class="position-relative">
+                  {% if a.photo %}
+                    <img class="card-img-top" src="{{ a.photo.url }}?v={{ a.updated_at|date:'U' }}" alt="{{ a.nom }}">
+                  {% else %}
+                    <img class="card-img-top" src="{% static 'img/placeholder.png' %}" alt="{{ a.nom }}">
+                  {% endif %}
+
+              <div class="venue_badge">{{ a.type_animation }}</div>
+              <div class="venue_price_badge">{{ a.prix_base }} DT</div>
+            </div>
+
+            <div class="venue_card_body">
+              <div class="venue_title">{{ a.nom }}</div>
+              <div class="venue_info_line"><strong>Capacité :</strong> {{ a.capacite_max }} personnes</div>
+              <div class="venue_info_line"><strong>Type :</strong> {{ a.get_interieur_exterieur_display }}</div>
+            </div>
+
+            <div class="venue_footer">
+              <div class="venue_meta">
+                {% if a.disponible %}
+                  <i class="ti-check"></i> Disponible
+                {% else %}
+                  <i class="ti-close"></i> Indisponible
+                {% endif %}
+              </div>
+              <a href="{% url 'animationapp:res_create' %}?animateur={{ a.pk }}" class="boxed_btn3 btn-venue">Réserver</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="row">
+      <div class="col-xl-12">
+        <div class="alert alert-info text-center">Aucun animateur disponible pour le moment.</div>
+      </div>
+    </div>
+  {% endif %}
+  </div>
+</div>
+{% endblock %}

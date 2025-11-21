@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Détail Réservation{% endblock %}
+
+{% block content %}
+<style>
+/* ----- Bandeau titre + fleur ----- */
+.res-detail-header{
+    position:relative;
+    padding-top:40px;
+    padding-bottom:40px;
+    text-align:center;
+}
+.res-detail-title{
+    font-family:"Playfair Display",serif;
+    font-size:2.4rem;
+}
+.res-detail-sub{
+    font-style:italic;
+    color:#777;
+}
+.res-detail-flower{
+    position:absolute;
+    top:50%;
+    left:50%;
+    width:450px;
+    transform:translate(-50%,-50%);
+    opacity:0.14;
+    pointer-events:none;
+    z-index:-1;
+}
+
+/* ----- Carte détail ----- */
+.res-detail-card{
+    border:none;
+    border-radius:24px;
+    padding:25px 26px;
+    background:#fff;
+    box-shadow:0 14px 35px rgba(0,0,0,0.06);
+    max-width:800px;
+    margin:auto;
+}
+
+/* liste infos */
+.res-detail-info dt{
+    font-weight:600;
+    color:#444;
+    font-family:"Playfair Display",serif;
+    margin-top:10px;
+}
+.res-detail-info dd{
+    margin-bottom:10px;
+    color:#666;
+}
+
+/* statut chip */
+.res-status{
+    padding:4px 12px;
+    border-radius:999px;
+    font-size:.8rem;
+    font-weight:600;
+}
+.res-status-confirme{
+    background:rgba(64,176,100,.12);
+    color:#2f8b5b;
+}
+.res-status-annule{
+    background:rgba(215,91,91,.12);
+    color:#c75656;
+}
+.res-status-attente{
+    background:rgba(150,150,150,.12);
+    color:#555;
+}
+
+/* Boutons */
+.btn-evoria-main{
+    background:linear-gradient(135deg,#f0a4c0,#e29a6d);
+    border:none;
+    border-radius:999px;
+    padding:.48rem 1.3rem;
+    font-weight:500;
+}
+.btn-evoria-main:hover{
+    filter:brightness(.95);
+}
+.btn-evoria-secondary{
+    border-radius:999px;
+}
+
+.res-detail-photo{
+    width:100%;
+    max-height:380px;
+    object-fit:cover;
+    border-radius:18px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.10);
+}
+
+.modal{ z-index: 20000 !important; }
+.modal-backdrop{ z-index: 19900 !important; }
+</style>
+
+<div class="container py-5">
+
+    <!-- Bannière -->
+    <section class="res-detail-header mb-5">
+        <img src="{% static 'img/appointment/flower-top.png' %}" class="res-detail-flower">
+
+        <h1 class="res-detail-title">Réservation #{{ object.pk }}</h1>
+        <p class="res-detail-sub">Détails complets de votre prestation</p>
+
+        <div class="mt-3 d-flex justify-content-center gap-2">
+            <a class="btn btn-evoria-main"
+               href="{% url 'animationapp:res_update' object.pk %}">
+               Éditer
+            </a>
+
+            <button type="button" class="btn btn-outline-danger btn-evoria-secondary"
+               data-toggle="modal" data-target="#deleteModal-{{ object.pk }}">
+               Supprimer
+            </button>
+
+            <a class="btn btn-outline-secondary btn-evoria-secondary"
+               href="{% url 'animationapp:res_list' %}">
+               Retour
+            </a>
+        </div>
+    </section>
+
+    <!-- Carte -->
+    <div class="res-detail-card">
+
+        <div class="mb-4">
+            {% if object.animateur.photo %}
+                <img src="{{ object.animateur.photo.url }}" class="res-detail-photo" alt="{{ object.animateur.nom }}">
+            {% else %}
+                <img src="{% static 'img/lawyers/lawyers_2.jpg' %}" class="res-detail-photo" alt="Animateur">
+            {% endif %}
+        </div>
+
+        <dl class="row res-detail-info">
+
+            <dt class="col-sm-4">Animateur</dt>
+            <dd class="col-sm-8">
+                {{ object.animateur.nom }}
+            </dd>
+
+            <dt class="col-sm-4">Début</dt>
+            <dd class="col-sm-8">{{ object.date_debut|date:"d/m/Y H:i" }}</dd>
+
+            <dt class="col-sm-4">Fin</dt>
+            <dd class="col-sm-8">{{ object.date_fin|date:"d/m/Y H:i" }}</dd>
+
+            <dt class="col-sm-4">Lieu</dt>
+            <dd class="col-sm-8">{{ object.lieu }}</dd>
+
+            <dt class="col-sm-4">Statut</dt>
+            <dd class="col-sm-8">
+                <span class="res-status
+                    {% if object.statut == 'confirme' %}res-status-confirme
+                    {% elif object.statut == 'annule' %}res-status-annule
+                    {% else %}res-status-attente{% endif %}">
+                    {{ object.get_statut_display }}
+                </span>
+            </dd>
+
+            <dt class="col-sm-4">Total</dt>
+            <dd class="col-sm-8 fw-semibold">{{ object.prix_total }} DT</dd>
+
+        </dl>
+    </div>
+
+    <div class="modal fade" id="deleteModal-{{ object.pk }}" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius:18px;">
+          <div class="modal-header border-0">
+            <h5 class="modal-title">Supprimer la réservation #{{ object.pk }} ?</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Fermer"><span aria-hidden="true">&times;</span></button>
+          </div>
+          <div class="modal-body">
+            <p>Voulez-vous vraiment supprimer cette réservation pour <strong>{{ object.animateur.nom }}</strong> ?</p>
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-outline-secondary btn-sm" data-dismiss="modal">Annuler</button>
+            <form method="post" action="{% url 'animationapp:res_delete' object.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-sm">Confirmer la suppression</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container">
+  <h2 style="margin:0 0 0.25rem">Menu du traiteur</h2>
+  {% if caterer %}
+  <p class="muted" style="margin:0 0 0.75rem">{{ caterer.company_name|default:caterer.name }} · <a href="/Catering/choose/">changer de traiteur</a></p>
+  {% endif %}
+  <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:1rem">
+    {% for item in items %}
+    <div class="card" style="border:1px solid #eee; border-radius:8px; padding:1rem">
+      <h3 style="margin:0 0 0.5rem">{{ item.title }}</h3>
+      <p class="muted" style="margin:0 0 0.5rem">{{ item.get_category_display }}</p>
+      {% if item.description %}<p style="margin:0 0 0.5rem">{{ item.description }}</p>{% endif %}
+      <p style="font-weight:600">{{ item.price }} €</p>
+      <div style="margin-top:0.5rem">
+        <a href="#" class="boxed-btn">Choisir</a>
+      </div>
+    </div>
+    {% empty %}
+    <p class="muted">Aucun élément de menu disponible.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

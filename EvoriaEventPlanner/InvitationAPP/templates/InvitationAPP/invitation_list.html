@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Invitations<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Confirmer la suppression</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        Êtes-vous sûr de vouloir supprimer cette invitation ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="boxed-btn2" data-dismiss="modal">Annuler</button>
+        <button type="button" class="boxed-btn5" id="confirmDelete">Supprimer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$('#deleteModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget);
+  var url = button.data('delete-url');
+  var itemId = button.data('item-id');
+  var modal = $(this);
+  modal.find('#confirmDelete').data('url', url).data('item-id', itemId);
+});
+
+$('#confirmDelete').click(function() {
+  var url = $(this).data('url');
+  var itemId = $(this).data('item-id');
+  $.ajax({
+    url: url,
+    type: 'POST',
+    headers: {'X-CSRFToken': '{{ csrf_token }}'},
+    success: function(data) {
+      if (data.success) {
+        $('#invitation-' + itemId).closest('.col-xl-4').remove();
+      }
+    }
+  });
+  $('#deleteModal').modal('hide');
+});
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="slider_area venues_hero">
+  <div class="slider_area_inner slider_bg_1 overlay2">
+    <div class="slider_text text-center">
+      <div class="text_inner">
+        <img src="{% static 'img/banner/ornaments.png' %}" alt="">
+        <h4>Planifiez vos événements</h4>
+        <h3>Nos Invitations</h3>
+        <span>Créez et gérez vos invitations élégamment</span>
+      </div>
+    </div>
+  </div>
+  </div>
+
+<style>
+  .venues_hero .slider_area_inner { display:flex; align-items:center; justify-content:center; min-height:280px; }
+  .venues_hero .text_inner h3 { font-size:36px; text-transform:uppercase; letter-spacing:3px; }
+  .venues_hero .text_inner span { display:inline-block; margin-top:10px; padding:4px 14px; border-radius:20px; background:rgba(255,255,255,0.12); color:#fff; font-size:13px; letter-spacing:2px; }
+
+  .venue_list_area { padding:80px 0 90px 0; position:relative; }
+  .venue_card { border-radius:16px; overflow:hidden; background:#fff; box-shadow:0 12px 30px rgba(0,0,0,0.08); transition:transform .25s ease, box-shadow .25s ease; height:100%; display:flex; flex-direction:column; }
+  .venue_card:hover { transform:translateY(-6px); box-shadow:0 20px 45px rgba(0,0,0,0.12); }
+  .venue_card_body { padding:18px 18px 10px 18px; flex:1 1 auto; }
+  .venue_title { font-size:18px; font-weight:600; margin-bottom:4px; }
+  .venue_info_line { font-size:13px; margin-bottom:6px; color:#777; }
+  .venue_footer { border-top:1px solid #f3f3f3; padding:10px 18px 14px 18px; font-size:13px; display:flex; justify-content:space-between; align-items:center; }
+  .btn-venue { border-radius:25px; padding:6px 18px; font-size:13px; text-transform:uppercase; letter-spacing:1px; }
+</style>
+
+<div class="venue_list_area">
+  <div class="container">
+    <div class="row mb-3">
+      <div class="col-xl-12 text-center">
+        <a href="{% url 'InvitationAPP:invitation_create' %}" class="boxed-btn">Ajouter une invitation</a>
+      </div>
+    </div>
+
+    {% if liste %}
+      <div class="row">
+        {% for obj in liste %}
+          <div class="col-xl-4 col-lg-4 col-md-6 mb-4">
+            <div class="venue_card" id="invitation-{{ obj.pk }}">
+              <div class="venue_card_body">
+                <div class="venue_title">{{ obj.name }}</div>
+                <div class="venue_info_line"><strong>Thème :</strong> {{ obj.theme }}</div>
+                <div class="venue_info_line"><strong>Dates :</strong> {{ obj.start_date }} – {{ obj.end_date }}</div>
+              </div>
+              <div class="venue_footer" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                <a href="{% url 'InvitationAPP:invitation_detail' obj.pk %}" class="boxed-btn4 btn-venue">Voir</a>
+                <a href="{% url 'InvitationAPP:invitation_update' obj.pk %}" class="boxed-btn4 btn-venue">Éditer</a>
+                <button class="boxed-btn5 btn-venue" data-toggle="modal" data-target="#deleteModal" data-delete-url="{% url 'InvitationAPP:invitation_delete' obj.pk %}" data-item-id="{{ obj.pk }}">Supprimer</button>
+                <a href="{% url 'InvitationAPP:guest_list' obj.pk %}" class="boxed-btn btn-venue">Invités</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="row">
+        <div class="col-xl-12">
+          <div class="alert alert-info text-center">Aucune invitation pour le moment.</div>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

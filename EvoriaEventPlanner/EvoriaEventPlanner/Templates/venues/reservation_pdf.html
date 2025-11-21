@@ -1,0 +1,17 @@
+​
+Wala OUESLATI​
+{% for reservation in today_reservations %}
+    <div class="reservation-details">
+        <strong>Venue:</strong> {{ reservation.venue.nom_v }}<br>
+        <strong>Reservation Date:</strong> {{ reservation.date_reservation }}<br>
+        <strong>Start Time:</strong> {{ reservation.start_time }}<br>
+        <strong>Duration:</strong> {{ reservation.duration_minutes }} minutes
+    </div>
+   
+    <!-- Ensure that the reservation ID is passed to the PDF URL -->
+    {% if reservation.id %}
+        <a href="{% url 'generate_reservation_pdf' reservation.id %}" class="btn btn-primary">Download PDF</a>
+    {% else %}
+        <p>No reservation ID available for PDF generation.</p>
+    {% endif %}
+{% endfor %}

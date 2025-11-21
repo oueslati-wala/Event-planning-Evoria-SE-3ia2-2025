@@ -1,0 +1,133 @@
+.profile_form_box {
+  background: #fff;
+  display: inline-block;
+  z-index: 9;
+  padding: 50px 40px 60px 40px;
+  -webkit-box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border-radius: 8px;
+}
+
+.profile_form_box h3 {
+  text-align: center;
+  font-size: 36px;
+  color: #C78665;
+  margin-bottom: 20px;
+}
+
+.profile_form_box p {
+  font-size: 15px;
+  color: #727272;
+  font-family: "Muli", sans-serif;
+  margin-bottom: 30px;
+}
+
+.profile_form_box input,
+.profile_form_box textarea,
+.profile_form_box select {
+  width: 100%;
+  border: 1px solid #ddd;
+  padding: 15px;
+  margin-bottom: 20px;
+  font-family: "Muli", sans-serif;
+  font-size: 16px;
+  color: #333;
+  border-radius: 4px;
+}
+
+.profile_form_box input::-webkit-input-placeholder,
+.profile_form_box textarea::-webkit-input-placeholder,
+.profile_form_box select::-webkit-input-placeholder {
+  color: #919191;
+  font-weight: 400;
+}
+
+.profile_form_box input:-ms-input-placeholder,
+.profile_form_box textarea:-ms-input-placeholder,
+.profile_form_box select:-ms-input-placeholder {
+  color: #919191;
+  font-weight: 400;
+}
+
+.profile_form_box input::-ms-input-placeholder,
+.profile_form_box textarea::-ms-input-placeholder,
+.profile_form_box select::-ms-input-placeholder {
+  color: #919191;
+  font-weight: 400;
+}
+
+.profile_form_box input::placeholder,
+.profile_form_box textarea::placeholder,
+.profile_form_box select::placeholder {
+  color: #919191;
+  font-weight: 400;
+}
+
+.profile_form_box input:focus,
+.profile_form_box textarea:focus,
+.profile_form_box select:focus {
+  outline: none;
+  border-color: #C78665;
+}
+
+.profile_form_box textarea {
+  height: 120px;
+}
+
+.profile_form_box button {
+  width: 100%;
+  background-color: #C78665;
+  color: #fff;
+  border: none;
+  padding: 15px;
+  font-family: "Muli", sans-serif;
+  text-transform: capitalize;
+  cursor: pointer;
+  border-radius: 4px;
+  -webkit-transition: background 0.3s ease;
+  transition: background 0.3s ease;
+}
+
+.profile_form_box button:hover {
+  background-color: #b76a42;
+}
+
+@media (max-width: 767px) {
+  .profile_form_box {
+    padding: 20px;
+  }
+  .profile_form_box h3 {
+    font-size: 25px;
+  }
+}
+
+.profile_form_box .profile_submit_btn {
+  width: 100%;
+  background-color: #C78665;
+  color: #fff;
+  border: none;
+  padding: 15px;
+  font-family: "Muli", sans-serif;
+  text-transform: capitalize;
+  cursor: pointer;
+  border-radius: 4px;
+  -webkit-transition: background 0.3s ease;
+  transition: background 0.3s ease;
+}
+
+.profile_form_box .profile_submit_btn:hover {
+  background-color: #b76a42;
+}
+/*# sourceMappingURL=profile.css.map */
+.modal-backdrop {
+    z-index: 99998 !important;
+}
+
+.modal {
+    z-index: 99999 !important;
+}
+
+.attending_area, 
+.popup_box {
+    z-index: 1 !important;
+}

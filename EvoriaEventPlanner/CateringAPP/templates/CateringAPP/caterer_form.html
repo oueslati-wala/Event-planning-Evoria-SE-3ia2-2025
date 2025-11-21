@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container">
+  <h2 style="margin:0 0 0.75rem">Traiteur</h2>
+  <form method="post" class="form">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="boxed-btn">Enregistrer</button>
+    <a href="{% url 'CateringAPP:caterer_list' %}" class="boxed-btn2">Annuler</a>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container">
+  <h2 style="margin:0 0 0.75rem">Choisir un traiteur</h2>
+  <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(260px, 1fr)); gap:1rem">
+    {% for obj in liste %}
+    <div class="card" style="border:1px solid #eee; border-radius:8px; padding:1rem">
+      <h3 style="margin:0 0 0.5rem">{{ obj.company_name|default:obj.name }}</h3>
+      <p class="muted" style="margin:0 0 0.5rem">{{ obj.name }}</p>
+      {% if obj.website %}<p><a href="{{ obj.website }}" target="_blank">Site web</a></p>{% endif %}
+      <div style="margin-top:0.5rem">
+        <a href="{% url 'CateringAPP:caterer_choose' obj.pk %}" class="boxed-btn">Choisir</a>
+      </div>
+    </div>
+    {% empty %}
+    <p class="muted">Aucun traiteur disponible.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

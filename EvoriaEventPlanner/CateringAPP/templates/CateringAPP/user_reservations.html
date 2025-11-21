@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Mes réservations restauration{% endblock %}
+{% block content %}
+<div class="slider_area venues_hero">
+  <div class="slider_area_inner slider_bg_1 overlay2">
+    <div class="slider_text text-center">
+      <div class="text_inner">
+        <img src="{% static 'img/banner/ornaments.png' %}" alt="">
+        <h4>Vos services traiteur</h4>
+        <h3>Mes réservations</h3>
+        <span>Historique des réservations restauration</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .venue_list_area { padding:80px 0 90px 0; position:relative; }
+  .reservation_card { border-radius:16px; overflow:hidden; background:#fff; box-shadow:0 12px 30px rgba(0,0,0,0.08); transition:transform .25s ease, box-shadow .25s ease; }
+  .reservation_card:hover { transform:translateY(-6px); box-shadow:0 20px 45px rgba(0,0,0,0.12); }
+  .reservation_card .p-3 { padding:20px; }
+  .reservation_card h5 { font-size:18px; margin-bottom:10px; }
+  .reservation_card .text-muted { font-size:14px; }
+</style>
+
+<div class="venue_list_area">
+  <div class="container">
+    <div class="row g-4">
+      {% if reservations %}
+        {% for r in reservations %}
+          <div class="col-xl-4 col-lg-4 col-md-6">
+            <div class="reservation_card">
+              <div class="p-3">
+                <h5>{{ r.caterer }}</h5>
+                <div class="text-muted">Date: {{ r.date_reservation }}</div>
+                <div class="text-muted">Début: {{ r.start_time|default:"--:--" }}</div>
+                <div class="text-muted">Durée: {{ r.duration_minutes }} min</div>
+                <div class="mt-2">
+                  <span class="badge bg-secondary">Événement: {{ r.event.nom_evenement }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="col-xl-12">
+          <div class="alert alert-info text-center">Aucune réservation restauration pour le moment.</div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
