@@ -2,6 +2,8 @@ from django.shortcuts import redirect, render
 from .forms import UserProfileForm, UserRegisterForm
 from django.contrib.auth import logout
 # Create your views here.
+def profil(request):
+    return render(request, 'users/profil.html')
 def profil_user(request):
     user = request.user
 
@@ -9,7 +11,7 @@ def profil_user(request):
         form = UserProfileForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
-            return redirect('profil_user')
+            return redirect('profil')
     else:
         form = UserProfileForm(instance=user)
 

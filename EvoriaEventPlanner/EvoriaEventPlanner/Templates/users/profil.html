@@ -1,4 +1,5 @@
 {% load static %}
+
 <!doctype html>
 <html class="no-js" lang="zxx">
 
@@ -21,31 +22,9 @@
     <link rel="stylesheet" href="{% static 'css/slicknav.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'scss/style.scss' %}">
+    <link rel="stylesheet" href="{% static 'css/profile_user.css' %}">
 
-    <!-- Modal -->
-    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
 
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirm the modifications</h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-
-                <div class="modal-body">
-                    Are you sure you want to confirm these modifications?
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="boxed_btn3" onclick="document.querySelector('#profileForm').submit();">
-                        Confirm
-                    </button>
-                </div>
-
-            </div>
-        </div>
-    </div>
 </head>
 <header>
     <div class="header-area ">
@@ -112,17 +91,16 @@
         </div>
     </div>
 </div> -->
-<!--/ slider_area -->
-
-{% load static %}
-
+<!-- profile_area -->
 <!-- profile_area -->
 <div class="attending_area profile_form_area">
     <div class="container">
         <div class="row">
             <div class="col-xl-10 offset-xl-1 col-lg-10 offset-lg-1">
+
                 <div class="main_attending_area main_profile_form">
-                    <!-- optional decorative flowers -->
+
+                    <!-- decorative flowers -->
                     <div class="flower_1 d-none d-lg-block">
                         <img src="{% static 'img/appointment/flower-top.png' %}" alt="">
                     </div>
@@ -130,56 +108,47 @@
                         <img src="{% static 'img/appointment/flower-bottom.png' %}" alt="">
                     </div>
 
-                    <div class="row justify-content-center">
-                        <div class="col-xl-7 col-lg-8">
-                            <div class="popup_box ">
-                                <div class="popup_inner">
-                                    <div class="form_heading text-center">
-                                        <h3>Edit My profil</h3>
-                                        <p>Update Personal Information</p>
-                                    </div>
-                                    <form id="profileForm" method="POST" enctype="multipart/form-data">
-                                        {% csrf_token %}
-                                        <div class="row">
-                                            <div class="col-xl-12">
-                                                {{ form.username }}
-                                            </div>
-                                            <div class="col-xl-12">
-                                                {{ form.email }}
-                                            </div>
-                                            <div class="col-xl-12">
-                                                {{ form.nationality }}
-                                            </div>
-                                            <div class="col-xl-12">
-                                                {{ form.adresse }}
-                                            </div>
-                                            <div class="col-xl-12">
-                                                {{ form.num_tel }}
-                                            </div>
-                                            <div class="col-xl-12">
-                                                {{ form.theme }}
-                                            </div>
-                                            <div class="col-xl-12">
-                                                <button type="button" class="boxed_btn3" data-toggle="modal"
-                                                    data-target="#confirmModal">
-                                                    Enregistrer
-                                                </button>
-                                                <!-- <button class="boxed_btn3" data-toggle="modal" data-target="#confirmModal">Confirm</button> -->
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div> <!-- /popup_box -->
+                    <!-- ❗❗ ICI : vraie ROW contenant sidebar + content -->
+                    <div class="row">
+
+                        <!-- SIDEBAR -->
+                        <div class="col-lg-3">
+                            <div class="popup_box" style="padding: 20px;">
+                                <h4 class="text-center">My Account</h4>
+                                <ul class="profile_menu">
+                                    <li><a class="active" href="{% url 'profil' %}">My Profile</a></li>
+                                    <li><a href="{% url 'profil_user' %}">Edit Personal Information</a></li>
+                                    <li><a href="#">My Events</a></li>
+                                    <li><a href="#">Settings & Preferences</a></li>
+                                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                                </ul>
+                            </div>
                         </div>
-                    </div> <!-- /row -->
-                </div> <!-- /main_profile_form -->
+
+                        <!-- CONTENT -->
+                        <div class="col-lg-9">
+                            <div class="popup_box">
+                                <h3 class="text-center">My Profile</h3>
+                                <table class="table table-borderless mt-4" style="font-family: 'Arial', sans-serif; font-size: 16px;">
+                                    <tr><th>Username</th><td>{{ user.username }}</td></tr>
+                                    <tr><th>Email</th><td>{{ user.email }}</td></tr>
+                                    <tr><th>Nationality</th><td>{{ user.nationality }}</td></tr>
+                                    <tr><th>Address</th><td>{{ user.adresse }}</td></tr>
+                                    <tr><th>Phone Number</th><td>{{ user.num_tel }}</td></tr>
+                                    <tr><th>Theme</th><td>{{ user.theme }}</td></tr>
+                                    
+                                </table>
+
+                                <div class="text-center mt-4">
+                                    <a href="{% url 'profil_user' %}" class="boxed_btn3">Edit My Personal Info</a>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div> <!-- END .row -->
+
+                </div>
             </div>
         </div>
     </div>
 </div>
-<!-- /profile_area -->
-<script src="{% static 'js/vendor/jquery-1.12.4.min.js' %}"></script>
-<script src="{% static 'js/popper.min.js' %}"></script>
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
-
-</html>

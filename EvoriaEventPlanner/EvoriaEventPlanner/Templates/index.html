@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{% static 'css/gijgo.css' %}">
     <link rel="stylesheet" href="{% static 'css/slicknav.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile_user.css' %}">
 </head>
 
 <body>
@@ -59,7 +60,7 @@
                                                 {% endif %}
                                                 My Profile</a>
                                             <ul class="submenu">
-                                                <li><a href="{% url 'profil_user' %}">View Profile</a></li>
+                                                <li><a href="{% url 'profil' %}">View Profile</a></li>
                                                 <li><a href="{% url 'login' %}">Logout</a></li>
                                             </ul>
                                         </li>
