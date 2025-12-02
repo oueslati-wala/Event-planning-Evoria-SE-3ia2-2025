@@ -12,7 +12,7 @@ def profil_user(request):
         form = UserProfileForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
-            return redirect('profil_user')
+            return redirect('profil')  # Redirect to the profile page after successful update
     else:
         form = UserProfileForm(instance=user)
 
