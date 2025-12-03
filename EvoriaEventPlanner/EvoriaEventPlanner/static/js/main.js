@@ -268,14 +268,7 @@ dots:false,
 });
 //------- Mailchimp js --------//  
 function mailChimp() {
-  try {
-    var $form = $('#mc_embed_signup').find('form');
-    if ($form.length && $.fn && $.fn.ajaxChimp) {
-      $form.ajaxChimp();
-    }
-  } catch (e) {
-    // noop
-  }
+  $('#mc_embed_signup').find('form').ajaxChimp();
 }
 mailChimp();
 

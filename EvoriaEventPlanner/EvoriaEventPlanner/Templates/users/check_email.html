@@ -1,0 +1,7 @@
+<h2>Check your email</h2>
+<p>We sent you an activation link. Please check your inbox.</p>
+{% if user.is_active %}
+<p>Le compte est activé.</p>
+{% else %}
+<p>Le compte n'est pas activé.</p>
+{% endif %}

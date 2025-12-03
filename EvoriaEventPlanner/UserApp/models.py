@@ -64,10 +64,12 @@ class User(AbstractUser):
     ]
     theme = models.CharField(max_length=50, choices=Themes, default="light")
     role = models.ForeignKey(
-        Role, on_delete=models.SET_NULL, null=True, blank=True, related_name="users"
+        Role, on_delete=models.SET_NULL, null=True, related_name="users", default=2
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=False)
+    totp_secret = models.CharField(max_length=32, blank=True, null=True)  # secret 2FA
 
     def __str__(self):
         return f"{self.firstname} {self.lastname}"

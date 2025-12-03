@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="{% static 'css/gijgo.css' %}">
     <link rel="stylesheet" href="{% static 'css/slicknav.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile_user.css' %}">
 </head>
 
 <body>
@@ -36,47 +37,37 @@
                             </div>
                         </div>
                         <div class="col-xl-9 col-lg-9">
-    <div class="main-menu d-none d-lg-block">
-        <nav>
-            <ul id="navigation">
-                <li><a class="active" href="#">Home</a></li>
-                <li><a href="story.html">Our Story</a></li>
-                <li><a href="{% url 'venues_list' %}">Venues</a></li>
-                <li><a href="/animation/">Animations</a></li>
-                <li><a href="/catering/">Catering</a></li>
-                <li><a href="{% url 'InvitationAPP:invitation_list' %}">Invitations</a></li>
-
-                <li><a href="#">Reservations <i class="ti-angle-down"></i></a>
-                    <ul class="submenu">
-                        <li><a href="{% url 'venues_list' %}">Venues</a></li>
-                        <li><a href="{% url 'CateringAPP:front_portal' %}">Catering Menus</a></li>
-                        <li><a href="{% url 'InvitationAPP:invitation_list' %}">Invitations</a></li>
-                    </ul>
-                </li>
-
-                <li><a href="#">Contact</a></li>
-
-                <li>
-                    <a href="#">
-                        {% if request.user.profile.avatar %}
-                        <img src="{{ request.user.profile.avatar.url }}" alt="Avatar"
-                             class="story_thumb"
-                             style="width:25px; height:25px; object-fit:cover; margin-right:5px;">
-                        {% else %}
-                        <i class="fa fa-user" style="font-size:25px; margin-right:5px;"></i>
-                        {% endif %}
-                        My Profile
-                    </a>
-                    <ul class="submenu">
-                        <li><a href="{% url 'profil' %}">View Profile</a></li>
-                        <li><a href="{% url 'login' %}">Logout</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </nav>
-    </div>
-</div>
-
+                            <div class="main-menu d-none d-lg-block">
+                                <nav>
+                                    <ul id="navigation">
+                                        <li><a class="active" href="#">Home</a></li>
+                                        <li><a href="story.html">Our Story</a></li>
+                                        <li><a href="Gallery.html">Gallery</a></li>
+                                        <li><a href="#">Reservations <i class="ti-angle-down"></i></a>
+                                            <ul class="submenu">
+                                                <li><a href="Accommodation.html">Venues</a></li>
+                                                <li><a href="elements.html">Menus</a></li>
+                                            </ul>
+                                        </li>
+                                        <li><a href="#">Contact</a></li>
+                                        <li><a href="#">
+                                                {% if request.user.profile.avatar %}
+                                                <img src="{{ request.user.profile.avatar.url }}" alt="Avatar"
+                                                    class="story_thumb"
+                                                    style="width:25px; height:25px; object-fit:cover; margin-right:5px;">
+                                                {% else %}
+                                                <i class="fa fa-user" style="font-size:25px; margin-right:5px;"></i>
+                                                {% endif %}
+                                                My Profile</a>
+                                            <ul class="submenu">
+                                                <li><a href="{% url 'profil' %}">View Profile</a></li>
+                                                <li><a href="{% url 'login' %}">Logout</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
                         <div class="col-12">
                             <div class="mobile_menu d-block d-lg-none"></div>
                         </div>
@@ -95,12 +86,6 @@
                     <h4>14 Jan 2020</h4>
                     <h3>Anjelina & Jack <br> Wedding Ceremony</h3>
                     <span>Get Married</span>
-                    <div class="mt-4 d-flex justify-content-center flex-wrap gap-2">
-    <a href="{% url 'InvitationAPP:invitation_list' %}" class="boxed-btn">Browse Invitations</a>
-    <a href="{% url 'CateringAPP:front_portal' %}" class="boxed-btn">Explore Catering</a>
-    <a href="{% url 'venues_list' %}" class="boxed-btn">Discover Venues</a>
-    <a href="/animation/" class="boxed-btn">View Animations</a>
-</div>
                 </div>
             </div>
         </div>

@@ -119,15 +119,3 @@
   background-color: #b76a42;
 }
 /*# sourceMappingURL=profile.css.map */
-.modal-backdrop {
-    z-index: 99998 !important;
-}
-
-.modal {
-    z-index: 99999 !important;
-}
-
-.attending_area, 
-.popup_box {
-    z-index: 1 !important;
-}
