@@ -2,32 +2,45 @@ from django.shortcuts import redirect, render
 from .forms import UserProfileForm, UserRegisterForm
 from django.contrib.auth import logout
 from django.contrib.sites.shortcuts import get_current_site
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+from .utils import account_activation_token
+
+import pyotp
+import qrcode
+import io
+import base64
 
 from django.contrib.auth.decorators import login_required
+
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
+
 User = get_user_model()
-from .utils import account_activation_token
+
+
 # Create your views here.
 def profil(request):
-    return render(request, 'users/profil.html')
+    return render(request, "users/profil.html")
+
+
 def profil_user(request):
     user = request.user
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = UserProfileForm(request.POST, request.FILES, instance=user)
         if form.is_valid():
             form.save()
-            return redirect('profil')
+            return redirect("profil")
     else:
         form = UserProfileForm(instance=user)
 
-    return render(request, 'users/profil_user.html', {'form': form})
+    return render(request, "users/profil_user.html", {"form": form})
+
+
 # # Create your views here.
 # def register(request):
 #     if request.method == "POST":
@@ -54,13 +67,18 @@ def register(request):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             token = account_activation_token.make_token(user)
 
-            activation_link = f"http://{current_site.domain}/users/activate/{uid}/{token}/"
+            activation_link = (
+                f"http://{current_site.domain}/users/activate/{uid}/{token}/"
+            )
 
             subject = "Activate your account"
-            html_message = render_to_string("users/activation_email.html", {
-                "user": user,
-                "activation_link": activation_link,
-            })
+            html_message = render_to_string(
+                "users/activation_email.html",
+                {
+                    "user": user,
+                    "activation_link": activation_link,
+                },
+            )
 
             email = EmailMultiAlternatives(subject, "", to=[user.email])
             email.attach_alternative(html_message, "text/html")
@@ -110,12 +128,69 @@ def activate_account(request, uidb64, token):
             return redirect("profil")
         else:
             print(f"Token invalide pour {user.username}")
-            print(f"is_active={user.is_active}, last_login={user.last_login}, password_hash={user.password[:10]}...")
+            print(
+                f"is_active={user.is_active}, last_login={user.last_login}, password_hash={user.password[:10]}..."
+            )
     else:
         print("Utilisateur introuvable pour cet UID")
 
     return render(request, "users/activation_failed.html")
-    
+
+
+def login_view(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            user = None
+
+        if user is not None and user.check_password(password):
+            # Si le secret 2FA n'existe pas, on le crée
+            if not user.totp_secret:
+                user.totp_secret = pyotp.random_base32()
+                user.save()
+            request.session["pre_2fa_user_id"] = user.pk  # stocker temporairement
+            return redirect("two_factor")
+        else:
+            return render(request, "login.html", {"error": "Invalid credentials"})
+    return render(request, "login.html")
+
+
+# page 2FA
+def two_factor(request):
+    user_id = request.session.get("pre_2fa_user_id")
+    if not user_id:
+        return redirect("login")
+
+    user = User.objects.get(pk=user_id)
+
+    # Générer QR code si l'utilisateur n'a pas scanné l'app
+    totp_uri = pyotp.totp.TOTP(user.totp_secret).provisioning_uri(
+        name=user.email, issuer_name="EvoriaApp"
+    )
+    # QR code en base64 pour affichage
+    qr = qrcode.make(totp_uri)
+    buffered = io.BytesIO()
+    qr.save(buffered, format="PNG")
+    qr_base64 = base64.b64encode(buffered.getvalue()).decode()
+
+    if request.method == "POST":
+        code = request.POST.get("code")
+        totp = pyotp.TOTP(user.totp_secret)
+        if totp.verify(code):
+            login(request, user)
+            return redirect("profil")  # connecté avec succès
+        else:
+            return render(
+                request,
+                "users/two_factor.html",
+                {"error": "Invalid 2FA code", "qr": qr_base64},
+            )
+
+    return render(request, "users/two_factor.html", {"qr": qr_base64})
+
 
 def logout_view(req):
     logout(req)

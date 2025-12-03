@@ -69,6 +69,7 @@ class User(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=False)
+    totp_secret = models.CharField(max_length=32, blank=True, null=True)  # secret 2FA
 
     def __str__(self):
         return f"{self.firstname} {self.lastname}"
