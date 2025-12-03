@@ -1,0 +1,54 @@
+{% extends "admin/change_list.html" %}
+
+{% block content %}
+<div class="module" style="margin-bottom:20px;">
+  <h2>Statistiques des invités</h2>
+  <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap;">
+    <div style="flex:0 0 320px;">
+      <canvas id="guestStatusPie" width="320" height="320"></canvas>
+    </div>
+    <div style="flex:1 1 280px;display:flex;flex-wrap:wrap;gap:12px;">
+      {% for s in status_stats %}
+        <div style="flex:1 1 180px;border:1px solid #ddd;padding:12px;border-radius:6px;">
+          <div style="font-weight:600;">{{ s.label }}</div>
+          <div style="margin:6px 0;">{{ s.count }} / {{ total_guests }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{{ block.super }}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  (function() {
+    var ctx = document.getElementById('guestStatusPie');
+    if (!ctx) return;
+    var labels = [];
+    var data = [];
+    {% for s in status_stats %}
+      labels.push("{{ s.label }}");
+      data.push({{ s.count|default:0 }});
+    {% endfor %}
+    var colors = ['#6c757d','#0d6efd','#dc3545','#198754','#343a40'];
+    var chart = new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: data,
+          backgroundColor: colors.slice(0, labels.length),
+          borderColor: '#fff',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'right' },
+          tooltip: { enabled: true }
+        }
+      }
+    });
+  })();
+</script>
+{% endblock %}

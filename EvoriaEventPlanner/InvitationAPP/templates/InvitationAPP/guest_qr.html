@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<section class="container">
+  <h2 style="text-align:center; margin:0 0 0.5rem">QR Code pour {{ guest.first_name }} {{ guest.last_name }}</h2>
+  <p style="text-align:center; margin:0 0 1rem">Invitation: {{ invitation.name }}</p>
+  <div style="display:flex; justify-content:center; align-items:center; min-height:40vh">
+    <div id="qrcode" style="padding:12px; border:1px solid #ddd; border-radius:8px; background:#fff"></div>
+  </div>
+  <div style="text-align:center; margin-top:1rem">
+    <a href="{% url 'InvitationAPP:guest_send_options' invitation.pk guest.pk %}" class="boxed-btn2">Retour</a>
+  </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+  (function() {
+    var el = document.getElementById('qrcode');
+    if (!el) return;
+    new QRCode(el, {
+      text: "{{ qr_payload }}",
+      width: 280,
+      height: 280,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.M
+    });
+  })();
+</script>
+{% endblock %}

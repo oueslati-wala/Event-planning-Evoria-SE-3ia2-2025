@@ -1,8 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+from django.conf import settings
+from django.core.mail import send_mail
 from .models import Invitation, Guest
 from .forms import InvitationForm, GuestForm
 from EventApp.models import Event
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
+from django.core.mail import EmailMessage
 
 def invitation_list(request):
     invitations = Invitation.objects.all()
@@ -110,3 +114,78 @@ def guest_send_options(request, invitation_pk, pk):
     invitation = get_object_or_404(Invitation, pk=invitation_pk)
     guest = get_object_or_404(Guest, pk=pk)
     return render(request, 'InvitationAPP/guest_send_options.html', {'guest': guest, 'invitation': invitation})
+
+def guest_qr(request, invitation_pk, pk):
+    invitation = get_object_or_404(Invitation, pk=invitation_pk)
+    guest = get_object_or_404(Guest, pk=pk)
+    target_url = request.build_absolute_uri(
+        reverse('InvitationAPP:invitation_detail', args=[invitation.pk])
+    )
+    payload = f"{target_url}?guest={guest.pk}"
+    return render(request, 'InvitationAPP/guest_qr.html', {
+        'guest': guest,
+        'invitation': invitation,
+        'qr_payload': payload,
+    })
+
+def guest_send_email(request, invitation_pk, pk):
+    invitation = get_object_or_404(Invitation, pk=invitation_pk)
+    guest = get_object_or_404(Guest, pk=pk)
+    sent = False
+    error = None
+    if guest.email:
+        target_url = request.build_absolute_uri(
+            reverse('InvitationAPP:invitation_detail', args=[invitation.pk])
+        )
+        subject = f"Invitation: {invitation.name}"
+        body = (
+            f"Bonjour {guest.first_name} {guest.last_name},\n\n"
+            f"Vous êtes invité à: {invitation.name}.\n"
+            f"Date: {invitation.start_date} de {invitation.start_time or ''}\n"
+            f"Thème: {invitation.theme}\n\n"
+            f"Consultez les détails ici: {target_url}\n\n"
+            f"Cordialement."
+        )
+        try:
+            send_mail(subject, body, getattr(settings, 'DEFAULT_FROM_EMAIL', 'no-reply@localhost'), [guest.email])
+            sent = True
+        except Exception as e:
+            error = str(e)
+            sent = False
+    return render(request, 'InvitationAPP/guest_email_sent.html', {
+        'guest': guest,
+        'invitation': invitation,
+        'sent': sent,
+        'error': error,
+        'email_backend': getattr(settings, 'EMAIL_BACKEND', ''),
+    })
+
+def send_simple_email(request):
+    subject = "Hello from Django!"
+    message = "This is a test email sent from your Evoria application."
+    from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', '')
+    to = request.GET.get('to') or getattr(settings, 'EMAIL_HOST_USER', '')
+    recipient_list = [to] if to else []
+    if not recipient_list:
+        return HttpResponse("No recipient configured. Provide ?to=recipient@example.com or set EMAIL_HOST_USER.", status=400)
+    try:
+        send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+    except Exception as e:
+        return HttpResponse(f"Failed: {e}", status=500)
+    return HttpResponse("Email sent successfully!")
+
+def send_complex_email(request):
+    subject = "Email with HTML and Attachment"
+    body = "<p>This is an <strong>HTML email</strong> from Evoria.</p>"
+    from_email = getattr(settings, 'DEFAULT_FROM_EMAIL', '')
+    to = request.GET.get('to') or getattr(settings, 'EMAIL_HOST_USER', '')
+    recipient_list = [to] if to else []
+    if not recipient_list:
+        return HttpResponse("No recipient configured. Provide ?to=recipient@example.com or set EMAIL_HOST_USER.", status=400)
+    try:
+        email = EmailMessage(subject, body, from_email, recipient_list)
+        email.content_subtype = "html"
+        email.send(fail_silently=False)
+    except Exception as e:
+        return HttpResponse(f"Failed: {e}", status=500)
+    return HttpResponse("Complex email sent successfully!")

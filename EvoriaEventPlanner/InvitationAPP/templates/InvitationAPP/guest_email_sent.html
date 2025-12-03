@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="container">
+  <h2 style="text-align:center; margin:0 0 0.5rem">Email d'invitation</h2>
+  {% if sent %}
+    <p style="text-align:center">Email envoyé à <strong>{{ guest.email }}</strong>.</p>
+  {% else %}
+    <p style="text-align:center">Impossible d'envoyer l'email. Vérifiez l'adresse ou la configuration.</p>
+    {% if email_backend and 'console' in email_backend %}
+      <p style="text-align:center">Mode développement: l'email est imprimé dans la console du serveur.</p>
+    {% endif %}
+    {% if error %}
+      <p style="text-align:center; color:#b00020">Erreur: {{ error }}</p>
+    {% endif %}
+  {% endif %}
+  <div style="text-align:center; margin-top:1rem">
+    <a href="{% url 'InvitationAPP:guest_send_options' invitation.pk guest.pk %}" class="boxed-btn2">Retour</a>
+  </div>
+</section>
+{% endblock %}

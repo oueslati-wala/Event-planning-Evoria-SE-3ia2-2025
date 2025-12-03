@@ -13,7 +13,11 @@ urlpatterns = [
     path('<int:invitation_pk>/guests/', views.guest_list, name='guest_list'),
     path('<int:invitation_pk>/guests/create/', views.guest_create, name='guest_create'),
     path('<int:invitation_pk>/guests/<int:pk>/send/', views.guest_send_options, name='guest_send_options'),
+    path('<int:invitation_pk>/guests/<int:pk>/qr/', views.guest_qr, name='guest_qr'),
+    path('<int:invitation_pk>/guests/<int:pk>/email/', views.guest_send_email, name='guest_send_email'),
     path('<int:invitation_pk>/guests/<int:pk>/update/', views.guest_update, name='guest_update'),
     path('<int:invitation_pk>/guests/<int:pk>/delete/', views.guest_delete, name='guest_delete'),
     path('event-info/<int:event_id>/', views.event_info, name='event_info'),
+    path('send-simple-email/', views.send_simple_email, name='send_simple_email'),
+    path('send-complex-email/', views.send_complex_email, name='send_complex_email'),
 ]
