@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "AnimationApp",
     "CateringAPP",
     "InvitationAPP",
+    "django_recaptcha",
 
 ]
 
@@ -85,6 +86,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
     }
+
 }
 
 
@@ -150,4 +152,18 @@ AUTH_USER_MODEL = "UserApp.User"
 LOGIN_REDIRECT_URL="index"
 LOGOUT_REDIRECT_URL="login"
 LOGIN_URL="login"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'funstufffunstuff01@gmail.com'      # Ton adresse Gmail
+EMAIL_HOST_PASSWORD = 'yzwtehiphogoszuu'   # Voir étape suivante
+RECAPTCHA_PUBLIC_KEY = '6LejYiAsAAAAAAoOrA42YEOWSKfsTkWMEVscWMhy'   # La clé publique fournie par Google
+RECAPTCHA_PRIVATE_KEY = '6LejYiAsAAAAAO7PYS-ae0kjz_hMrW58KlwoYZ9A' # La clé secrète fournie par Google
+# Durée de vie de la session en secondes (ex: 30 minutes)
+# Durée d'inactivité avant expiration de session (en secondes)
+SESSION_COOKIE_AGE = 30 * 60  # 30 minutes
+SESSION_SAVE_EVERY_REQUEST = True  # Réinitialise le compteur à chaque requête 
+# Supprimer la session lorsque l’utilisateur ferme le navigateur
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 

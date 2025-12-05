@@ -1,0 +1,67 @@
+<!-- <h2>Activation failed</h2>
+<p>The activation link is invalid or has expired.</p>
+{% if user.is_active %}
+<p>Le compte est activé.</p>
+{% else %}
+<p>Le compte n'est pas activé.</p>
+{% endif %} -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Activation échouée</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+
+    <style>
+
+        .card-msg {
+            background: #e6c9c4;
+            padding: 40px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            position: relative;
+        }
+
+        .card-msg h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .card-msg p {
+            color: #555;
+            font-size: 15px;
+            margin-bottom: 15px;
+        }
+
+        .btn-main {
+            display: inline-block;
+            background: #acab79;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="flower_1 d-none d-lg-block" style="position: left-center;padding: 40px; padding-right: 60px;"">
+        <img src="{% static 'img/appointment/flower-top.png' %}" alt="">
+    </div>
+
+    <div class="card-msg">
+        <h2>Activation échouée</h2>
+        <p>Le lien d’activation est invalide ou a expiré.</p>
+    </div>
+
+</body>
+
+</html>

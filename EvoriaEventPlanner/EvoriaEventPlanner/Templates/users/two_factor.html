@@ -1,0 +1,113 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Two-Factor Authentication</title>
+  <link rel="stylesheet" href="{% static 'css/login.css' %}">
+  <style>
+
+    .auth-container {
+      background: #e6c9c4;
+      padding: 40px 30px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+      position: relative;
+    }
+
+    /* .flower_1 {
+      position: absolute;
+      top: -40px;
+      left: -40px;
+      width: 80px;
+      height: 80px;
+    } */
+
+    .auth-container h2 {
+      margin-bottom: 15px;
+      color: #333;
+      font-size: 24px;
+    }
+
+    .auth-container p {
+      margin-bottom: 20px;
+      font-size: 14px;
+      color: #555;
+    }
+
+    .auth-container img.qr-code {
+      width: 180px;
+      height: 180px;
+      margin-bottom: 20px;
+    }
+
+    form input[type="text"] {
+      width: 100%;
+      padding: 12px 10px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      outline: none;
+      transition: 0.3s;
+    }
+
+    form input[type="text"]:focus {
+      border-color: #299158;
+      box-shadow: 0 0 5px rgba(74, 226, 173, 0.5);
+    }
+
+    form button {
+      width: 100%;
+      padding: 12px;
+      background-color: #acab79;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    form button:hover {
+      background-color: #357abd;
+    }
+
+    .error-msg {
+      color: red;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Decorative flower -->
+  <div class="flower_1 d-none d-lg-block" style="position: left-center;padding: 40px; padding-right: 60px;">
+    <img src="{% static 'img/appointment/flower-top.png' %}" alt="Flower">
+  </div>
+  <div class="auth-container">
+
+
+    <h2>Two-Factor Authentication</h2>
+    <p>Scan this QR code in Google Authenticator if you haven't done so:</p>
+    <img class="qr-code" src="data:image/png;base64,{{ qr }}" alt="QR Code">
+
+    <form method="POST">
+      {% csrf_token %}
+      <input type="text" name="code" placeholder="Enter 2FA code" required>
+      <button type="submit">Verify</button>
+    </form>
+
+    {% if error %}
+    <p class="error-msg">{{ error }}</p>
+    {% endif %}
+  </div>
+</body>
+
+</html>

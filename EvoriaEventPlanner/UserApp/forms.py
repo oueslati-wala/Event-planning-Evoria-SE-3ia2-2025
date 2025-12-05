@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
+from django_recaptcha.fields import ReCaptchaField
+from django_recaptcha.widgets import ReCaptchaV2Checkbox
 
 User = get_user_model()
 
@@ -38,6 +40,7 @@ class UserProfileForm(forms.ModelForm):
 
 
 class UserRegisterForm(UserCreationForm):
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())  # Ajoute le reCAPTCHA
     class Meta:
         model = User
         fields = [
@@ -96,3 +99,53 @@ def save(self, commit=True):
     if commit:
         user.save()
     return user
+class LoginForm(forms.Form):
+    # email = forms.EmailField()
+    # password = forms.CharField(widget=forms.PasswordInput)
+    email = forms.EmailField(
+    widget=forms.EmailInput(attrs={
+        "placeholder": "", 
+        "autocomplete": "email",
+        "class": "input-field"
+    })
+    )
+
+    password = forms.CharField(
+    widget=forms.PasswordInput(attrs={
+        "placeholder": "",
+        "autocomplete": "current-password",
+        "class": "input-field"
+    })
+    )
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
+
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get("email")
+        password = cleaned_data.get("password")
+
+        if email and password:
+            try:
+                user = User.objects.get(email=email)
+            except User.DoesNotExist:
+                user = None
+
+            if user is None or not user.check_password(password):
+                raise forms.ValidationError("Email ou mot de passe incorrect")
+
+        return cleaned_data
+    
+class ForgotPasswordForm(forms.Form):
+    email = forms.EmailField()
+
+class ResetPasswordForm(forms.Form):
+    new_password = forms.CharField(widget=forms.PasswordInput)
+    confirm_password = forms.CharField(widget=forms.PasswordInput)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        pw1 = cleaned_data.get("new_password")
+        pw2 = cleaned_data.get("confirm_password")
+        if pw1 and pw2 and pw1 != pw2:
+            raise forms.ValidationError("Les mots de passe ne correspondent pas")
+        return cleaned_data

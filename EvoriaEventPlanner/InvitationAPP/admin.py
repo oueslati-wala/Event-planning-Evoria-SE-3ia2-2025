@@ -4,7 +4,7 @@ from .models import Invitation, Guest
 
 
 admin.site.site_title = "Evoria"
-admin.site.site_header = "Gestion des invitations et invités"
+admin.site.site_header = "Evoria Administration"
 admin.site.index_title = "Django App Invitations"
 
 

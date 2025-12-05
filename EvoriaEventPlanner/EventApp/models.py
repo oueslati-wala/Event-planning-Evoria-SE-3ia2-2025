@@ -1,5 +1,4 @@
 from django.db import models
-from django.db import models
   # This fetches the custom user model
 
  # This fetches the actual User model used in the project

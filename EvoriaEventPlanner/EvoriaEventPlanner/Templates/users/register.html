@@ -1,0 +1,70 @@
+<!-- {% block content %}
+
+<h2>Create your account</h2>
+<form method="post">
+    {% csrf_token %}
+    {{form.as_p }}
+    <button type="submit">Sign Up</button>
+</form>
+{% endblock %} -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+
+<body>
+    <!-- decorative flowers -->
+  <div class="flower_1 d-none d-lg-block">
+    <img src="{% static 'img/appointment/flower-top.png' %}" alt="">
+  </div>
+        <div class="login-container">
+            <div class="login-card">
+
+                <div class="login-header">
+                    <h2>Create Account</h2>
+                    <p>Sign up to start your journey</p>
+                </div>
+
+                <form class="login-form" id="registerForm" novalidate method="POST">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group {% if field.errors %}error{% endif %}">
+                        <div class="input-wrapper">
+                            {{ field }}
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            <span class="focus-border"></span>
+                        </div>
+                        {% for error in field.errors %}
+                        <span class="error-message show">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+
+                    <button type="submit" class="login-btn btn">
+                        <span class="btn-text">Sign Up</span>
+                        <span class="btn-loader"></span>
+                    </button>
+
+                </form>
+
+                <div class="signup-link">
+                    <p>Already have an account? <a href="{% url 'login' %}">Sign in</a></p>
+                </div>
+
+            </div>
+        </div>
+        <div class="flower_2 d-none d-lg-block">
+            <img src="{% static 'img/appointment/flower-bottom.png' %}" alt="">
+        </div>
+
+            <script src="{% static 'js/form-utils.js' %}"></script>
+            <script src="{% static 'js/login.js' %}"></script>
+</body>
+
+</html>
