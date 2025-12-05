@@ -21,7 +21,7 @@
 /* 1. Theme default css */
 /* line 4, ../../Arafath/CL/CL september/212. Wedding/HTML/scss/theme-default.scss */
 body {
-  /* font-family: "Petit Formal Script", cursive; */
+  font-family: "Petit Formal Script", cursive;
   font-weight: normal;
   font-style: normal;
   overflow-x: hidden;
@@ -2348,14 +2348,11 @@ h2 {
 /* line 101, ../../Arafath/CL/CL september/212. Wedding/HTML/scss/_elements.scss */
 h3 {
   font-size: 24px;
-  font-family: "Petit Formal Script", cursive;
 }
 
 /* line 105, ../../Arafath/CL/CL september/212. Wedding/HTML/scss/_elements.scss */
 h4 {
   font-size: 18px;
-  font-family: "Petit Formal Script", cursive;
-  
 }
 
 /* line 109, ../../Arafath/CL/CL september/212. Wedding/HTML/scss/_elements.scss */

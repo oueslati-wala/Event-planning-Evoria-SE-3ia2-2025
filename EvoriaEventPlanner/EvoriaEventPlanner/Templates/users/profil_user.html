@@ -22,6 +22,7 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'scss/style.scss' %}">
 
+
 </head>
 <header>
     <div class="header-area ">
@@ -49,7 +50,7 @@
                                         </ul>
                                     </li>
                                     <li><a href="contact.html">Contact</a></li>
-                                    <li><a class="active" href="#">
+                                    <li><a class ="active" href="#">
                                             {% if request.user.profile.avatar %}
                                             <img src="{{ request.user.profile.avatar.url }}" alt="Avatar"
                                                 class="story_thumb"
@@ -58,11 +59,11 @@
                                             <i class="fa fa-user" style="font-size:25px; margin-right:5px;"></i>
                                             {% endif %}
                                             My Profile</a>
-                                        <ul class="submenu">
-                                            <li><a href="{% url 'profil' %}">View Profile</a></li>
-                                            <li><a href="{% url 'logout' %}">Logout</a></li>
-                                        </ul>
-                                    </li>
+                                            <ul class="submenu">
+                                                <li><a href="{% url 'profil_user' %}">View Profile</a></li>
+                                                <li><a href="{% url 'logout' %}">Logout</a></li>
+                                            </ul>
+                                        </li>
                                 </ul>
                             </nav>
                         </div>
@@ -114,7 +115,7 @@
                                         <h3>Edit My profil</h3>
                                         <p>Update Personal Information</p>
                                     </div>
-                                    <form id="profileForm" method="POST" enctype="multipart/form-data">
+                                    <form method="POST" enctype="multipart/form-data">
                                         {% csrf_token %}
                                         <div class="row">
                                             <div class="col-xl-12">
@@ -136,11 +137,7 @@
                                                 {{ form.theme }}
                                             </div>
                                             <div class="col-xl-12">
-                                                <button type="button" class="boxed_btn3" data-toggle="modal"
-                                                    data-target="#confirmModal">
-                                                    Enregistrer
-                                                </button>
-                                                <!-- <button class="boxed_btn3" data-toggle="modal" data-target="#confirmModal">Confirm</button> -->
+                                                <button type="submit" class="boxed_btn3">Enregistrer</button>
                                             </div>
                                         </div>
                                     </form>
@@ -153,33 +150,6 @@
         </div>
     </div>
 </div>
-<!-- Modal -->
-    <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirm the modifications</h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-
-                <div class="modal-body">
-                    Are you sure you want to confirm these modifications?
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="boxed_btn3" onclick="document.querySelector('#profileForm').submit();">
-                        Confirm
-                    </button>
-                </div>
-
-            </div>
-        </div>
-    </div>
 <!-- /profile_area -->
-<script src="{% static 'js/vendor/jquery-1.12.4.min.js' %}"></script>
-<script src="{% static 'js/popper.min.js' %}"></script>
-<script src="{% static 'js/bootstrap.min.js' %}"></script>
 
 </html>

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +39,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "UserApp",
+    "EventApp",
+    "VenuesApp",
+    "AnimationApp",
+    "CateringAPP",
+    "InvitationAPP",
+
 ]
 
 MIDDLEWARE = [
@@ -118,6 +125,23 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "EvoriaEventPlanner" / "static"]
 
+# Media files (uploaded images, etc.)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
+
+# Email configuration (environment-driven, defaults to console for dev)
+EMAIL_BACKEND = os.environ.get(
+    "EMAIL_BACKEND",
+    "django.core.mail.backends.console.EmailBackend",
+)
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587"))
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "True").lower() in ("1", "true", "yes")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "walaoueslati18@gmail.com")
+# Read password from environment to avoid hardcoding
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "kdib nfxe lxrj epup")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "walaoueslati18@gmail.com")
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
@@ -126,10 +150,4 @@ AUTH_USER_MODEL = "UserApp.User"
 LOGIN_REDIRECT_URL="index"
 LOGOUT_REDIRECT_URL="login"
 LOGIN_URL="login"
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'funstufffunstuff01@gmail.com'      # Ton adresse Gmail
-EMAIL_HOST_PASSWORD = 'yzwtehiphogoszuu'   # Voir étape suivante
 
